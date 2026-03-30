@@ -124,9 +124,9 @@
                   <div class="text-[0.55rem] font-bold uppercase text-gray-400 tracking-wider">Deduct.</div>
                   <div class="font-extrabold text-[0.9rem] text-red-600">{{ fmt(calcLoad(l).totalDeductions) }}</div>
                 </div>
-                <div class="py-2.5 text-center" :class="calcLoad(l).netPay >= 0 ? 'bg-blue-50/60' : 'bg-red-50/60'">
+                <div class="py-2.5 text-center" :class="calcLoad(l).netPay >= 0 ? 'bg-emerald-500/10' : 'bg-red-50/60 dark:bg-red-500/10'">
                   <div class="text-[0.55rem] font-bold uppercase text-gray-400 tracking-wider">Net</div>
-                  <div class="font-extrabold text-[0.9rem]" :style="{color: calcLoad(l).netPay >= 0 ? '#1e3a8a' : '#dc2626'}">{{ fmt(calcLoad(l).netPay) }}</div>
+                  <div class="font-extrabold text-[0.9rem]" :style="{color: calcLoad(l).netPay >= 0 ? '#22c55e' : '#dc2626'}">{{ fmt(calcLoad(l).netPay) }}</div>
                 </div>
               </div>
               <!-- Action bar -->
@@ -192,9 +192,9 @@
         <!-- Expenses -->
         <div class="card"><div class="card-header" style="background:#dc2626; color:#fff; border-radius:0.75rem 0.75rem 0 0;">Expenses</div><div class="card-body">
           <div v-for="(e, i) in form.expenses" :key="i" class="expense-row">
-            <input type="text" v-model="e.name" :disabled="e.isDriverPay" :style="e.isDriverPay ? 'background:#f0fdf4' : ''"/>
+            <input type="text" v-model="e.name" :disabled="e.isDriverPay" :class="e.isDriverPay ? 'driver-pay-label' : ''"/>
             <div class="flex gap-1">
-              <input v-if="e.isDriverPay" type="text" :value="fmt(formCalc.driverPay)" disabled class="text-right bg-green-50 font-semibold text-green-700"/>
+              <input v-if="e.isDriverPay" type="text" :value="fmt(formCalc.driverPay)" disabled class="text-right font-semibold driver-pay-amount"/>
               <input v-else type="number" v-model.number="e.amount" min="0" step="0.01" placeholder="0.00" class="text-right"/>
               <button v-if="!e.isDriverPay" class="btn btn-danger text-xs py-1 px-1.5" @click="form.expenses.splice(i,1)">&times;</button>
               <div v-else style="width:30px"></div>
@@ -218,9 +218,9 @@
         </div>
       </div>
 
-      <div class="flex gap-3">
-        <button class="btn btn-gold" @click="saveForm()">{{ editIndex < 0 ? 'Save Load' : 'Update Load' }}</button>
-        <button class="btn btn-outline" @click="editing = false">Cancel</button>
+      <div class="flex items-center gap-3 pb-6">
+        <button class="btn btn-gold flex-grow justify-center py-4 text-lg font-semibold tracking-wide" @click="saveForm()">{{ editIndex < 0 ? 'Save Load' : 'Update Load' }}</button>
+        <button class="btn btn-outline justify-center px-5 py-2 text-sm" @click="editing = false">Cancel</button>
       </div>
     </template>
   </div>

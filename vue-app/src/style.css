@@ -120,6 +120,12 @@ input::-webkit-outer-spin-button,input::-webkit-inner-spin-button { -webkit-appe
 .fade-in { animation:fadeIn .4s ease-out; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
+/* ---- Driver Pay Row ---- */
+.driver-pay-label { background:#f0fdf4 !important; color:#166534 !important; font-weight:700; border-color:#bbf7d0 !important; }
+.driver-pay-amount { background:#f0fdf4 !important; color:#16a34a !important; border-color:#bbf7d0 !important; }
+body.dark .driver-pay-label { background:rgba(34,197,94,.12) !important; color:#4ade80 !important; border-color:rgba(34,197,94,.25) !important; }
+body.dark .driver-pay-amount { background:rgba(34,197,94,.12) !important; color:#4ade80 !important; border-color:rgba(34,197,94,.25) !important; }
+
 /* ---- Print ---- */
 @media print { .no-print{display:none !important;} body{background:#fff;} }
 
@@ -226,14 +232,14 @@ body.dark .rounded-lg.bg-green-50 { background:rgba(52,211,153,.08) !important; 
 
 /* Header info card */
 body.dark .info-card { background:#1e293b !important; box-shadow:0 4px 24px rgba(0,0,0,.3) !important; }
-body.dark .info-card .bg-blue-50 { background:rgba(96,165,250,.12) !important; }
-body.dark .info-card .text-blue-700 { color:#93c5fd !important; }
-body.dark .info-card .bg-emerald-50 { background:rgba(52,211,153,.12) !important; }
-body.dark .info-card .text-emerald-700 { color:#6ee7b7 !important; }
-body.dark .info-card .bg-amber-50 { background:rgba(251,191,36,.12) !important; }
-body.dark .info-card .text-amber-700 { color:#fcd34d !important; }
-body.dark .info-card .bg-gray-100 { background:rgba(255,255,255,.08) !important; }
-body.dark .info-card .text-gray-600 { color:#94a3b8 !important; }
+body.dark .info-card .divide-gray-100 > :not(:last-child) { border-color:rgba(255,255,255,.06) !important; }
+body.dark .info-card .text-gray-800 { color:#e2e8f0 !important; }
+body.dark .info-card .text-gray-400 { color:#64748b !important; }
+body.dark .info-card .text-emerald-600 { color:#34d399 !important; }
+body.dark .info-card .text-amber-600 { color:#fbbf24 !important; }
+body.dark .info-card .text-indigo-600 { color:#a5b4fc !important; }
+body.dark .info-card .text-blue-600 { color:#60a5fa !important; }
+body.dark .info-card .bg-blue-50 { background:rgba(59,130,246,.15) !important; }
 
 /* Load mobile card */
 body.dark .md\:hidden.rounded-2xl { background:#1e293b !important; }

@@ -39,7 +39,7 @@
       border-radius:0.5rem; outline:none; transition:border-color .2s,box-shadow .2s; width:100%; background:#fff;
     }
     input:focus,select:focus,textarea:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
-    input[type="number"] { -moz-appearance:textfield; }
+    input[type="number"] { -moz-appearance:textfield; appearance:textfield; }
     input::-webkit-outer-spin-button,input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
     .sidebar-link { display:flex; align-items:center; gap:0.5rem; padding:0.55rem 1rem; font-size:0.95rem;
       color:#fff; transition:all .15s; border-bottom:1px solid rgba(255,255,255,.08);
@@ -180,10 +180,6 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       Expenses & Fuel
     </a>
-    <a class="sidebar-link" data-page="timeoff" onclick="switchPage('timeoff')">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Time Off
-    </a>
     <a class="sidebar-link" data-page="history" onclick="switchPage('history')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       Pay History
@@ -200,7 +196,7 @@
 
   <!-- Sidebar Footer -->
   <div class="px-4 py-3 border-t border-blue-800 text-blue-200 text-xs text-center">
-    &copy; 2024 Sunshine Trans INC
+    &copy; 6 Sunshine Trans INC
   </div>
 </aside>
 
@@ -413,16 +409,6 @@
           </div>
         </div>
 
-        <!-- Time Off Balances -->
-        <div class="rounded-lg overflow-hidden border border-gray-200">
-          <div class="text-center py-2 font-bold text-sm text-white" style="background:#134F5C;">TIME-OFF BALANCES</div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
-            <div><span class="label">Vacation</span><span class="font-bold text-gray-900" id="stubVacation">0</span></div>
-            <div><span class="label">Personal Day</span><span class="font-bold text-gray-900" id="stubPersonal">0</span></div>
-            <div><span class="label">Sick Leave</span><span class="font-bold text-gray-900" id="stubSick">0</span></div>
-            <div><span class="label">Medical Leave</span><span class="font-bold text-gray-900" id="stubMedical">0</span></div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -496,29 +482,6 @@
     </div>
   </div>
 
-  <!-- PAGE: Time Off -->
-  <div id="page-timeoff" class="page hidden">
-    <h2 class="text-2xl font-bold text-gray-900 mb-4">Time-Off Balances</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="card p-5">
-        <div class="label">Vacation</div>
-        <input type="number" id="toVacation" value="0" min="0" onchange="recalcAll()"/>
-      </div>
-      <div class="card p-5">
-        <div class="label">Personal Day</div>
-        <input type="number" id="toPersonal" value="0" min="0" onchange="recalcAll()"/>
-      </div>
-      <div class="card p-5">
-        <div class="label">Sick Leave</div>
-        <input type="number" id="toSick" value="0" min="0" onchange="recalcAll()"/>
-      </div>
-      <div class="card p-5">
-        <div class="label">Medical Leave</div>
-        <input type="number" id="toMedical" value="0" min="0" onchange="recalcAll()"/>
-      </div>
-    </div>
-    <button class="btn btn-primary mt-4" onclick="saveData(); showToast('Time-off balances saved','success')">Save Balances</button>
-  </div>
 
   <!-- PAGE: Pay History -->
   <div id="page-history" class="page hidden">
@@ -752,7 +715,6 @@ function getDefaultState() {
     loads: JSON.parse(JSON.stringify(DEFAULT_LOADS)),
     fuel: JSON.parse(JSON.stringify(DEFAULT_FUEL)),
     expenses: JSON.parse(JSON.stringify(DEFAULT_EXPENSES)),
-    timeOff: { vacation: 0, personal: 0, sick: 0, medical: 0 },
     settings: {
       payeeName: 'Daniel Beliard', paymentDate: '06/01/24-06/30/24', paymentMethod: 'Monthly',
       payRate: 20, taxStatus: '1099', allowances: 0, additionalPct: 0, additionalAmt: 0,
@@ -771,7 +733,7 @@ function loadState() {
       const parsed = JSON.parse(saved);
       const def = getDefaultState();
       // Merge to ensure no missing keys
-      return { ...def, ...parsed, settings: { ...def.settings, ...(parsed.settings || {}) }, timeOff: { ...def.timeOff, ...(parsed.timeOff || {}) } };
+      return { ...def, ...parsed, settings: { ...def.settings, ...(parsed.settings || {}) } };
     }
   } catch(e) {}
   return getDefaultState();
@@ -779,12 +741,6 @@ function loadState() {
 
 function saveData() {
   // Collect from UI
-  state.timeOff = {
-    vacation: parseFloat(document.getElementById('toVacation').value) || 0,
-    personal: parseFloat(document.getElementById('toPersonal').value) || 0,
-    sick: parseFloat(document.getElementById('toSick').value) || 0,
-    medical: parseFloat(document.getElementById('toMedical').value) || 0,
-  };
   state.messages = document.getElementById('messagesArea').value;
   localStorage.setItem('sunshine_payroll', JSON.stringify(state));
 }
@@ -977,10 +933,6 @@ function recalcAll() {
   document.getElementById('stubTotalGross').textContent = fmt(gross);
   document.getElementById('stubTotalDed').textContent = fmt(ded);
   document.getElementById('stubTotalNet').textContent = fmt(net);
-  document.getElementById('stubVacation').textContent = state.timeOff.vacation;
-  document.getElementById('stubPersonal').textContent = state.timeOff.personal;
-  document.getElementById('stubSick').textContent = state.timeOff.sick;
-  document.getElementById('stubMedical').textContent = state.timeOff.medical;
 
   // Stub loads
   document.getElementById('stubLoads').innerHTML = state.loads.map(l =>
@@ -1019,10 +971,6 @@ function recalcAll() {
   document.getElementById('setAdditionalAmt').value = state.settings.additionalAmt;
 
   // Time-off
-  document.getElementById('toVacation').value = state.timeOff.vacation;
-  document.getElementById('toPersonal').value = state.timeOff.personal;
-  document.getElementById('toSick').value = state.timeOff.sick;
-  document.getElementById('toMedical').value = state.timeOff.medical;
 
   // Messages
   document.getElementById('messagesArea').value = state.messages || '';
@@ -1179,10 +1127,6 @@ ${'='.repeat(45)}
   TOTAL DEDUCTIONS:   ${fmt(getTotalDeductions())}
   TOTAL NET PAY:      ${fmt(getNetPay())}
 ${'='.repeat(45)}
-
-TIME-OFF BALANCES
-  Vacation: ${state.timeOff.vacation} | Personal: ${state.timeOff.personal}
-  Sick: ${state.timeOff.sick} | Medical: ${state.timeOff.medical}
 
 ${state.messages ? 'NOTES:\n' + state.messages + '\n' : ''}
 Generated on ${new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })}`;

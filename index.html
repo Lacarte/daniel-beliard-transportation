@@ -128,12 +128,85 @@
     @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
     .animate-pulse-slow { animation:pulse 2s ease-in-out infinite; }
+
+    /* Theme Toggle */
+    .theme-toggle { position:relative; width:48px; height:26px; border-radius:9999px; cursor:pointer; border:none;
+      background:#cbd5e1; transition:background .3s; flex-shrink:0; }
+    .theme-toggle .toggle-knob { position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%;
+      background:#fff; transition:transform .3s; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 1px 3px rgba(0,0,0,.15); }
+    .theme-toggle.dark { background:#475569; }
+    .theme-toggle.dark .toggle-knob { transform:translateX(22px); background:#1e293b; }
+
+    /* Dark Theme */
+    body.dark { background:#0c1222; color:#e2e8f0; }
+    body.dark .card { background:#111827; border-color:rgba(255,255,255,.08); }
+    body.dark .card-header { border-color:rgba(255,255,255,.08); color:#94a3b8; }
+    body.dark input[type="number"],body.dark input[type="text"],body.dark input[type="date"],
+    body.dark input[type="email"],body.dark select,body.dark textarea {
+      background:#0c1222; border-color:rgba(255,255,255,.1); color:#e2e8f0; }
+    body.dark input::placeholder,body.dark textarea::placeholder { color:#475569; }
+    body.dark select option { background:#111827; }
+    body.dark .stat-card { background:#111827; border-color:rgba(255,255,255,.08); }
+    body.dark .label { color:#64748b; }
+    body.dark .btn-outline { border-color:rgba(255,255,255,.1); color:#94a3b8; }
+    body.dark .btn-outline:hover { background:rgba(255,255,255,.05); color:#e2e8f0; }
+    body.dark .sidebar-link.active { background:rgba(255,255,255,.1); color:#fbbf24; }
+    body.dark .sidebar-link.active svg { stroke:#fbbf24; }
+    body.dark .text-gray-900 { color:#f1f5f9 !important; }
+    body.dark .text-gray-500 { color:#94a3b8 !important; }
+    body.dark .text-gray-400 { color:#64748b !important; }
+    body.dark .text-gray-700 { color:#cbd5e1 !important; }
+    body.dark .bg-gray-50 { background:#0c1222 !important; }
+    body.dark .bg-gray-100 { background:#1e293b !important; }
+    body.dark .bg-green-50 { background:rgba(52,211,153,.1) !important; }
+    body.dark .text-green-700 { color:#34d399 !important; }
+    body.dark .bg-green-100 { background:rgba(52,211,153,.12) !important; }
+    body.dark .bg-blue-100 { background:rgba(96,165,250,.12) !important; }
+    body.dark .bg-amber-100 { background:rgba(245,166,35,.12) !important; }
+    body.dark .border-gray-200 { border-color:rgba(255,255,255,.08) !important; }
+    body.dark .border-gray-100 { border-color:rgba(255,255,255,.06) !important; }
+    body.dark .badge.bg-green-100 { background:rgba(52,211,153,.15) !important; }
+    body.dark .badge.text-green-700 { color:#34d399 !important; }
+    body.dark .toast-success { background:rgba(52,211,153,.9); color:#042f2e; }
+    body.dark .toast-error { background:rgba(239,68,68,.9); }
+    body.dark .toast-info { background:rgba(96,165,250,.9); color:#0c1222; }
+    body.dark .date-range-field { background:#0c1222; border-color:rgba(255,255,255,.1); color:#e2e8f0; }
+    body.dark .date-picker-dropdown { background:#1a2236; border-color:rgba(255,255,255,.1); }
+    body.dark .date-preset-btn { background:transparent; border-color:rgba(255,255,255,.1); color:#94a3b8; }
+    body.dark .date-preset-btn:hover { background:#1e3a8a; color:#fff; border-color:#1e3a8a; }
+    body.dark #sidebarOverlay { background:rgba(0,0,0,.6) !important; }
+    body.dark .mobile-period-pill { background:rgba(96,165,250,.12) !important; color:#93c5fd !important; }
   </style>
 </head>
 <body>
 
 <!-- Toast Notification -->
 <div id="toast" class="toast"></div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" onclick="if(event.target===this)closeDeleteModal()" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.6); backdrop-filter:blur(6px); align-items:center; justify-content:center;">
+  <div style="background:var(--bg-elevated); border:1px solid var(--border-dim); border-radius:1.25rem; padding:2rem; max-width:400px; width:90%; box-shadow:0 25px 60px rgba(0,0,0,.5); animation:fadeIn .2s ease-out;">
+    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+      <div style="width:44px; height:44px; border-radius:0.85rem; display:flex; align-items:center; justify-content:center; background:var(--red-dim); flex-shrink:0;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <div>
+        <div style="font-weight:700; font-size:1.1rem; color:var(--text-primary);">Delete Load</div>
+        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem;">This action cannot be undone</div>
+      </div>
+    </div>
+    <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.5rem;">Are you sure you want to delete:</p>
+    <div id="deleteModalName" style="font-weight:700; font-size:1rem; color:var(--amber); padding:0.65rem 0.85rem; border-radius:0.6rem; background:var(--bg-base); border:1px solid var(--border-subtle); margin-bottom:1.5rem; word-break:break-word;"></div>
+    <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeDeleteModal()" style="min-width:80px;">Cancel</button>
+      <button class="btn btn-danger" id="deleteModalConfirm" style="min-width:80px; background:var(--red); color:#fff; border-color:var(--red);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- PWA Install Banner -->
 <div id="pwaInstallBar" class="hidden fixed bottom-0 left-0 right-0 z-[70] bg-blue-900 text-white px-4 py-3 flex items-center justify-between gap-3 shadow-[0_-4px_20px_rgba(0,0,0,.2)] safe-bottom">
@@ -167,6 +240,10 @@
     <a class="sidebar-link active" data-page="dashboard" onclick="switchPage('dashboard')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Dashboard
+    </a>
+    <a class="sidebar-link" data-page="loadmanager" onclick="switchPage('loadmanager')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+      Load Manager
     </a>
     <a class="sidebar-link" data-page="paystub" onclick="switchPage('paystub')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -212,24 +289,65 @@
 
   <!-- Welcome Header -->
   <header class="card mb-4 no-print" style="border-color:#1e3a8a; border-width:1px;">
-    <div class="p-2 sm:p-3 flex items-center gap-2 sm:gap-3 flex-wrap">
-      <div class="h-9 w-9 sm:h-11 sm:w-11 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-lg uppercase flex-shrink-0" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">
-        <span id="headerInitials">DB</span>
-      </div>
-      <div class="flex-1 min-w-0">
-        <h1 class="text-base sm:text-xl font-bold text-gray-900 truncate">Welcome back, <span id="headerName">Daniel Beliard</span></h1>
-        <div class="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-0.5 text-xs sm:text-sm text-gray-500">
-          <span id="headerDate" class="hidden sm:inline">March 29, 2026</span>
-          <span class="hidden sm:inline">&bull;</span>
-          <span>Pay Period: <strong id="headerPeriod">06/01/24 - 06/30/24</strong></span>
-          <span class="hidden xs:inline">&bull;</span>
-          <span class="badge bg-green-100 text-green-700" id="headerTaxBadge">1099</span>
+    <!-- Mobile Header (< 640px) -->
+    <div class="sm:hidden">
+      <div class="flex items-center justify-between p-3 pb-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-md" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">
+            <span id="headerInitialsMobile">DB</span>
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-lg font-bold text-gray-900 truncate leading-tight">Welcome back</h1>
+            <p class="text-sm font-semibold text-gray-700 truncate" id="headerNameMobile">Daniel Beliard</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 flex-shrink-0">
+          <button id="themeToggleMobile" class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode" style="width:40px;height:24px;">
+            <div class="toggle-knob" style="width:20px;height:20px;">
+              <svg id="themeIconMobile" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+            </div>
+          </button>
+          <button class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors" onclick="switchPage('settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68"/></svg>
+          </button>
         </div>
       </div>
-      <button class="btn btn-outline text-xs sm:text-sm py-1.5 px-2 sm:px-3 flex-shrink-0" onclick="switchPage('settings')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68"/></svg>
-        <span class="hidden sm:inline">Settings</span>
-      </button>
+      <div class="flex items-center gap-2 px-3 pb-3">
+        <div class="mobile-period-pill flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold" style="background:rgba(30,58,138,.08); color:#1e3a8a;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span id="headerPeriodMobile">06/01/24 - 06/30/24</span>
+        </div>
+        <span class="badge bg-green-100 text-green-700 text-xs" id="headerTaxBadgeMobile">1099</span>
+      </div>
+    </div>
+    <!-- Desktop Header (>= 640px) -->
+    <div class="hidden sm:block">
+      <div class="p-3 flex items-center gap-3">
+        <div class="h-11 w-11 rounded-full flex items-center justify-center text-white font-bold text-lg uppercase flex-shrink-0" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">
+          <span id="headerInitials">DB</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <h1 class="text-xl font-bold text-gray-900 truncate">Welcome back, <span id="headerName">Daniel Beliard</span></h1>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-sm text-gray-500">
+            <span id="headerDate">March 29, 2026</span>
+            <span>&bull;</span>
+            <span>Pay Period: <strong id="headerPeriod">06/01/24 - 06/30/24</strong></span>
+            <span>&bull;</span>
+            <span class="badge bg-green-100 text-green-700" id="headerTaxBadge">1099</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+            <div class="toggle-knob">
+              <svg id="themeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+            </div>
+          </button>
+          <button class="btn btn-outline text-sm py-1.5 px-3" onclick="switchPage('settings')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68"/></svg>
+            Settings
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -685,6 +803,118 @@
     </div>
   </div>
 
+  <!-- PAGE: Load Manager -->
+  <div id="page-loadmanager" class="page hidden">
+    <!-- List View -->
+    <div id="lmListView">
+      <div class="flex items-center justify-between mb-5 flex-wrap gap-2">
+        <h2 class="text-xl font-bold" style="color:var(--text-primary);">Load Manager</h2>
+        <button class="btn btn-primary" onclick="lmShowCreate()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Create New Load</button>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <!-- Desktop header - hidden on mobile -->
+          <div class="hidden sm:grid font-bold text-xs uppercase tracking-wider" style="grid-template-columns:minmax(180px,2.5fr) minmax(100px,1.2fr) minmax(80px,1fr) minmax(80px,1fr) minmax(80px,1fr) 110px; gap:1rem; align-items:center; padding:0.65rem 1rem; border-bottom:2px solid var(--border-dim);">
+            <span style="color:var(--text-muted);">Load Name</span>
+            <span style="color:var(--text-muted);">Driver</span>
+            <span class="text-right" style="color:var(--text-muted);">Gross</span>
+            <span class="text-right" style="color:var(--text-muted);">Deductions</span>
+            <span class="text-right" style="color:var(--text-muted);">Net Pay</span>
+            <span class="text-center" style="color:var(--text-muted);">Actions</span>
+          </div>
+          <div id="lmLoadsList"></div>
+          <div id="lmEmpty" class="text-center py-12" style="color:var(--text-muted);">
+            <svg width="44" height="44" class="mx-auto mb-3" style="opacity:.3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <p class="text-base font-semibold">No loads created yet</p>
+            <p class="text-xs mt-1">Click "Create New Load" to get started</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create / Edit View -->
+    <div id="lmEditView" class="hidden">
+      <div class="flex items-center gap-3 mb-5">
+        <button class="btn btn-outline" onclick="lmBackToList()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+        <h2 class="text-xl font-bold" style="color:var(--text-primary);" id="lmEditTitle">Create New Load</h2>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; margin-bottom:1rem;">
+        <div class="card">
+          <div class="card-header">Load Information</div>
+          <div class="card-body" style="display:flex; flex-direction:column; gap:0.75rem;">
+            <div class="field-group"><div class="label">Load Name / Description</div><input type="text" id="lmLoadName" placeholder="e.g. Well Logistics INC (NY-FL)" oninput="lmRecalc()"/></div>
+            <div class="field-group"><div class="label">Load Amount ($)</div><input type="number" id="lmLoadAmount" placeholder="0.00" min="0" step="0.01" oninput="lmRecalc()"/></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Driver & Pay Info</div>
+          <div class="card-body" style="display:flex; flex-direction:column; gap:0.75rem;">
+            <div class="field-group"><div class="label">Driver Name</div><input type="text" id="lmDriverName" placeholder="e.g. Daniel Beliard"/></div>
+            <div class="field-group"><div class="label">Pay Rate (%)</div><input type="number" id="lmPayRate" value="20" min="0" max="100" step="1" oninput="lmRecalc()"/></div>
+            <div class="field-group"><div class="label">Payment Method</div><select id="lmPayMethod"><option value="Monthly">Monthly</option><option value="Bi-Weekly">Bi-Weekly</option><option value="Weekly">Weekly</option><option value="Per Load">Per Load</option></select></div>
+            <div class="field-group"><div class="label">Tax Status</div><select id="lmTaxStatus"><option value="1099">1099 (Independent Contractor)</option><option value="W-2">W-2 (Employee)</option></select></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1rem; margin-bottom:1rem;">
+        <div class="card">
+          <div class="card-header" style="background:linear-gradient(135deg,#b91c1c,#991b1b); color:#fff; border-radius:1rem 1rem 0 0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M13 10h4a2 2 0 0 1 2 2v8"/><circle cx="8" cy="10" r="2"/></svg>
+            Fuel Entries
+          </div>
+          <div class="card-body">
+            <div id="lmFuelContainer"></div>
+            <button class="btn btn-outline mt-3 text-xs" onclick="lmAddFuel()" style="width:100%; justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Fuel Entry</button>
+            <div class="flex justify-between items-center mt-3 pt-3 font-bold text-sm" style="border-top:1px solid var(--border-subtle);"><span style="color:var(--text-secondary);">Total Fuel</span><span style="color:var(--red);" id="lmFuelTotal">$0.00</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="background:linear-gradient(135deg,#b91c1c,#991b1b); color:#fff; border-radius:1rem 1rem 0 0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Expense Deductions
+          </div>
+          <div class="card-body">
+            <div id="lmExpensesContainer"></div>
+            <button class="btn btn-outline mt-3 text-xs" onclick="lmAddExpense()" style="width:100%; justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Expense</button>
+            <div class="flex justify-between items-center mt-3 pt-3 font-bold text-sm" style="border-top:1px solid var(--border-subtle);"><span style="color:var(--text-secondary);">Total Expenses</span><span style="color:var(--red);" id="lmExpensesTotal">$0.00</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="card" style="border-color:var(--border-accent);">
+        <div class="card-header">Summary</div>
+        <div class="card-body">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.75rem;">
+            <div class="rounded-xl text-center p-4" style="background:var(--bg-deep); border:1px solid var(--border-subtle);">
+              <div class="text-[0.65rem] font-bold uppercase tracking-wider mb-1" style="color:var(--text-muted);">Load Amount</div>
+              <div class="text-xl font-extrabold" style="color:var(--amber);" id="lmSumGross">$0.00</div>
+            </div>
+            <div class="rounded-xl text-center p-4" style="background:var(--bg-deep); border:1px solid var(--border-subtle);">
+              <div class="text-[0.65rem] font-bold uppercase tracking-wider mb-1" style="color:var(--text-muted);">Driver Pay</div>
+              <div class="text-xl font-extrabold" style="color:var(--blue);" id="lmSumDriver">$0.00</div>
+            </div>
+            <div class="rounded-xl text-center p-4" style="background:var(--bg-deep); border:1px solid var(--border-subtle);">
+              <div class="text-[0.65rem] font-bold uppercase tracking-wider mb-1" style="color:var(--text-muted);">Total Deductions</div>
+              <div class="text-xl font-extrabold" style="color:var(--red);" id="lmSumDeductions">$0.00</div>
+            </div>
+            <div class="rounded-xl text-center p-4" style="background:var(--bg-deep); border:1px solid var(--border-accent);">
+              <div class="text-[0.65rem] font-bold uppercase tracking-wider mb-1" style="color:var(--text-muted);">Net Pay</div>
+              <div class="text-xl font-extrabold" style="color:var(--emerald);" id="lmSumNet">$0.00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-5">
+        <button class="btn btn-gold" onclick="lmSaveLoad()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> <span id="lmSaveBtn">Save Load</span></button>
+        <button class="btn btn-outline" onclick="lmBackToList()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <!-- ==================== JAVASCRIPT ==================== -->
@@ -722,7 +952,8 @@ function getDefaultState() {
       defaultEmail: '', ccEmail: '', emailProvider: 'mailto'
     },
     history: [],
-    messages: ''
+    messages: '',
+    managedLoads: []
   };
 }
 
@@ -909,10 +1140,16 @@ function recalcAll() {
   document.getElementById('statNet').style.color = net >= 0 ? '#16a34a' : '#dc2626';
 
   // Header
+  const initials = state.settings.payeeName.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
   document.getElementById('headerName').textContent = state.settings.payeeName;
-  document.getElementById('headerInitials').textContent = state.settings.payeeName.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  document.getElementById('headerInitials').textContent = initials;
   document.getElementById('headerPeriod').textContent = state.settings.paymentDate;
   document.getElementById('headerTaxBadge').textContent = state.settings.taxStatus;
+  // Mobile header
+  document.getElementById('headerNameMobile').textContent = state.settings.payeeName;
+  document.getElementById('headerInitialsMobile').textContent = initials;
+  document.getElementById('headerPeriodMobile').textContent = state.settings.paymentDate;
+  document.getElementById('headerTaxBadgeMobile').textContent = state.settings.taxStatus;
 
   // Loads page total
   document.getElementById('loadsTotalDisplay').textContent = fmt(gross);
@@ -1177,6 +1414,7 @@ function switchPage(page) {
   // Page-specific init
   if (page === 'email') generateEmailBody();
   if (page === 'history') renderHistory();
+  if (page === 'loadmanager') { lmRenderList(); document.getElementById('lmListView').classList.remove('hidden'); document.getElementById('lmEditView').classList.add('hidden'); }
 
   // Close mobile sidebar
   const sidebar = document.getElementById('sidebar');
@@ -1202,6 +1440,224 @@ function showToast(msg, type = 'info') {
 // ========== UTILS ==========
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
+// ========== THEME ==========
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark');
+  const sunSvg = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>';
+  const moonSvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  ['themeToggle','themeToggleMobile'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.classList.toggle('dark', isDark);
+  });
+  ['themeIcon','themeIconMobile'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) { el.innerHTML = isDark ? moonSvg : sunSvg; el.setAttribute('stroke', isDark ? '#94a3b8' : '#f59e0b'); }
+  });
+  localStorage.setItem('sunshine_theme', isDark ? 'dark' : 'light');
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem('sunshine_theme');
+  if (saved === 'dark') {
+    document.body.classList.add('dark');
+    ['themeToggle','themeToggleMobile'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.classList.add('dark');
+    });
+    ['themeIcon','themeIconMobile'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) { el.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'; el.setAttribute('stroke', '#94a3b8'); }
+    });
+  }
+}
+
+// ========== LOAD MANAGER ==========
+var lmEditingIndex = -1;
+var lmFuel = [];
+var lmExpenses = [];
+
+function lmGetManagedLoads() {
+  if (!state.managedLoads) state.managedLoads = [];
+  return state.managedLoads;
+}
+
+function lmShowCreate() {
+  lmEditingIndex = -1;
+  document.getElementById('lmEditTitle').textContent = 'Create New Load';
+  document.getElementById('lmSaveBtn').textContent = 'Save Load';
+  document.getElementById('lmLoadName').value = '';
+  document.getElementById('lmLoadAmount').value = '';
+  document.getElementById('lmDriverName').value = state.settings.payeeName || '';
+  document.getElementById('lmPayRate').value = state.settings.payRate || 20;
+  document.getElementById('lmPayMethod').value = state.settings.paymentMethod || 'Monthly';
+  document.getElementById('lmTaxStatus').value = state.settings.taxStatus || '1099';
+  lmFuel = [];
+  lmExpenses = [
+    { name: 'Driver', amount: 0, isDriverPay: true },
+    { name: 'Insurance', amount: 0 }, { name: 'ELD Log', amount: 0 },
+    { name: 'Oil Change', amount: 0 }, { name: 'Trailer', amount: 0 },
+    { name: 'Shower', amount: 0 }, { name: 'Scale', amount: 0 },
+    { name: 'Food', amount: 0 }, { name: 'Toll', amount: 0 },
+    { name: 'Tire', amount: 0 }, { name: 'Maintenance', amount: 0 }
+  ];
+  lmRenderFuel(); lmRenderExpenses(); lmRecalc();
+  document.getElementById('lmListView').classList.add('hidden');
+  document.getElementById('lmEditView').classList.remove('hidden');
+}
+
+function lmShowEdit(index) {
+  var loads = lmGetManagedLoads();
+  if (index < 0 || index >= loads.length) return;
+  lmEditingIndex = index;
+  var load = loads[index];
+  document.getElementById('lmEditTitle').textContent = 'Edit Load';
+  document.getElementById('lmSaveBtn').textContent = 'Update Load';
+  document.getElementById('lmLoadName').value = load.name || '';
+  document.getElementById('lmLoadAmount').value = load.amount || 0;
+  document.getElementById('lmDriverName').value = load.driverName || '';
+  document.getElementById('lmPayRate').value = load.payRate != null ? load.payRate : 20;
+  document.getElementById('lmPayMethod').value = load.payMethod || 'Monthly';
+  document.getElementById('lmTaxStatus').value = load.taxStatus || '1099';
+  lmFuel = JSON.parse(JSON.stringify(load.fuel || []));
+  lmExpenses = JSON.parse(JSON.stringify(load.expenses || []));
+  lmRenderFuel(); lmRenderExpenses(); lmRecalc();
+  document.getElementById('lmListView').classList.add('hidden');
+  document.getElementById('lmEditView').classList.remove('hidden');
+}
+
+function lmBackToList() {
+  document.getElementById('lmEditView').classList.add('hidden');
+  document.getElementById('lmListView').classList.remove('hidden');
+  lmRenderList();
+}
+
+function lmRecalc() {
+  var amount = parseFloat(document.getElementById('lmLoadAmount').value) || 0;
+  var rate = parseFloat(document.getElementById('lmPayRate').value) || 0;
+  var driverPay = amount * (rate / 100);
+  var fuelTotal = lmFuel.reduce(function(s, f) { return s + (parseFloat(f.amount) || 0); }, 0);
+  var expTotal = lmExpenses.reduce(function(s, e) {
+    if (e.isDriverPay) return s + driverPay;
+    return s + (parseFloat(e.amount) || 0);
+  }, 0);
+  var totalDed = fuelTotal + expTotal;
+  var net = amount - totalDed;
+  document.getElementById('lmSumGross').textContent = fmt(amount);
+  document.getElementById('lmSumDriver').textContent = fmt(driverPay);
+  document.getElementById('lmSumDeductions').textContent = fmt(totalDed);
+  document.getElementById('lmSumNet').textContent = fmt(net);
+  document.getElementById('lmSumNet').style.color = net >= 0 ? 'var(--emerald)' : 'var(--red)';
+  document.getElementById('lmFuelTotal').textContent = fmt(fuelTotal);
+  document.getElementById('lmExpensesTotal').textContent = fmt(expTotal);
+  lmRenderExpenses();
+}
+
+function lmRenderFuel() {
+  document.getElementById('lmFuelContainer').innerHTML = lmFuel.map(function(f, i) {
+    return '<div class="expense-row fade-in"><input type="text" value="' + esc(f.name) + '" onchange="lmFuel[' + i + '].name=this.value" placeholder="Fuel stop"/><div class="flex gap-1"><input type="number" value="' + f.amount + '" onchange="lmFuel[' + i + '].amount=parseFloat(this.value)||0;lmRecalc()" min="0" step="0.01" class="text-right"/><button class="btn btn-danger text-xs py-1 px-1.5 flex-shrink-0" onclick="lmFuel.splice(' + i + ',1);lmRenderFuel();lmRecalc()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></div>';
+  }).join('');
+}
+
+function lmRenderExpenses() {
+  var amount = parseFloat(document.getElementById('lmLoadAmount').value) || 0;
+  var rate = parseFloat(document.getElementById('lmPayRate').value) || 0;
+  var dp = amount * (rate / 100);
+  document.getElementById('lmExpensesContainer').innerHTML = lmExpenses.map(function(e, i) {
+    var inp = e.isDriverPay ? '<input type="text" value="' + fmt(dp) + '" disabled class="text-right font-semibold" style="background:var(--emerald-dim);color:var(--emerald);border-color:transparent;"/>' : '<input type="number" value="' + e.amount + '" onchange="lmExpenses[' + i + '].amount=parseFloat(this.value)||0;lmRecalc()" min="0" step="0.01" class="text-right"/>';
+    var del = !e.isDriverPay ? '<button class="btn btn-danger text-xs py-1 px-1.5 flex-shrink-0" onclick="lmExpenses.splice(' + i + ',1);lmRenderExpenses();lmRecalc()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' : '<div style="width:32px"></div>';
+    return '<div class="expense-row fade-in"><input type="text" value="' + esc(e.name) + '" onchange="lmExpenses[' + i + '].name=this.value" placeholder="Expense type"' + (e.isDriverPay ? ' disabled style="background:var(--emerald-dim);color:var(--emerald);border-color:transparent;"' : '') + '/><div class="flex gap-1">' + inp + del + '</div></div>';
+  }).join('');
+}
+
+function lmAddFuel() { lmFuel.push({ name: 'Fuel', amount: 0 }); lmRenderFuel(); lmRecalc(); }
+function lmAddExpense() { lmExpenses.push({ name: '', amount: 0 }); lmRenderExpenses(); lmRecalc(); }
+
+function lmSaveLoad() {
+  var name = document.getElementById('lmLoadName').value.trim();
+  if (!name) { showToast('Please enter a load name', 'error'); return; }
+  var amount = parseFloat(document.getElementById('lmLoadAmount').value) || 0;
+  var rate = parseFloat(document.getElementById('lmPayRate').value) || 0;
+  var dp = amount * (rate / 100);
+  var ft = lmFuel.reduce(function(s, f) { return s + (parseFloat(f.amount) || 0); }, 0);
+  var et = lmExpenses.reduce(function(s, e) { return e.isDriverPay ? s + dp : s + (parseFloat(e.amount) || 0); }, 0);
+  var loadData = {
+    name: name, amount: amount,
+    driverName: document.getElementById('lmDriverName').value.trim(),
+    payRate: rate, payMethod: document.getElementById('lmPayMethod').value,
+    taxStatus: document.getElementById('lmTaxStatus').value,
+    fuel: JSON.parse(JSON.stringify(lmFuel)),
+    expenses: JSON.parse(JSON.stringify(lmExpenses)),
+    gross: amount, totalDeductions: ft + et, netPay: amount - (ft + et),
+    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+  };
+  var loads = lmGetManagedLoads();
+  if (lmEditingIndex >= 0 && lmEditingIndex < loads.length) {
+    loadData.createdAt = loads[lmEditingIndex].createdAt;
+    loads[lmEditingIndex] = loadData;
+    showToast('Load updated', 'success');
+  } else {
+    loads.push(loadData);
+    showToast('Load created', 'success');
+  }
+  saveData(); lmBackToList();
+}
+
+function lmDeleteLoad(index) {
+  var loads = lmGetManagedLoads();
+  if (index < 0 || index >= loads.length) return;
+  var modal = document.getElementById('deleteModal');
+  document.getElementById('deleteModalName').textContent = loads[index].name || 'Unnamed Load';
+  modal.style.display = 'flex';
+  document.getElementById('deleteModalConfirm').onclick = function() {
+    lmGetManagedLoads().splice(index, 1);
+    saveData(); lmRenderList();
+    closeDeleteModal();
+    showToast('Load deleted', 'info');
+  };
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'none';
+}
+
+function lmRenderList() {
+  var loads = lmGetManagedLoads();
+  var listEl = document.getElementById('lmLoadsList');
+  var emptyEl = document.getElementById('lmEmpty');
+  if (!loads.length) { listEl.innerHTML = ''; emptyEl.classList.remove('hidden'); return; }
+  emptyEl.classList.add('hidden');
+  listEl.innerHTML = loads.map(function(l, i) {
+    var net = l.netPay != null ? l.netPay : ((l.gross||l.amount||0) - (l.totalDeductions||0));
+    var gross = l.gross || l.amount || 0;
+    var ded = l.totalDeductions || 0;
+    var netColor = net >= 0 ? 'var(--emerald)' : 'var(--red)';
+    // Desktop row
+    var desktop = '<div class="hidden sm:grid fade-in" style="grid-template-columns:minmax(180px,2.5fr) minmax(100px,1.2fr) minmax(80px,1fr) minmax(80px,1fr) minmax(80px,1fr) 110px; gap:1rem; align-items:center; padding:0.75rem 1rem; border-bottom:1px solid var(--border-subtle);">'
+      + '<div><div class="font-semibold text-sm" style="color:var(--text-primary);">' + esc(l.name) + '</div><div class="text-xs" style="color:var(--text-muted);">' + esc(l.payMethod||'Monthly') + ' &middot; ' + esc(l.taxStatus||'1099') + '</div></div>'
+      + '<span class="text-sm font-medium" style="color:var(--text-secondary);">' + esc(l.driverName||'-') + '</span>'
+      + '<span class="text-right font-semibold text-sm" style="color:var(--amber);">' + fmt(gross) + '</span>'
+      + '<span class="text-right font-semibold text-sm" style="color:var(--red);">' + fmt(ded) + '</span>'
+      + '<span class="text-right font-semibold text-sm" style="color:' + netColor + ';">' + fmt(net) + '</span>'
+      + '<div class="flex gap-1.5 justify-center">'
+      + '<button class="btn btn-outline text-xs py-1 px-2" onclick="lmShowEdit(' + i + ')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>'
+      + '<button class="btn btn-danger text-xs py-1 px-2" onclick="lmDeleteLoad(' + i + ')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
+      + '</div></div>';
+    // Mobile card
+    var mobile = '<div class="sm:hidden fade-in" style="padding:1rem; border-bottom:1px solid var(--border-subtle);">'
+      + '<div class="flex items-start justify-between mb-3">'
+      + '<div><div class="font-bold text-base" style="color:var(--text-primary);">' + esc(l.name) + '</div>'
+      + '<div class="text-xs" style="color:var(--text-muted);">' + esc(l.driverName||'-') + ' &middot; ' + esc(l.payMethod||'Monthly') + ' &middot; ' + esc(l.taxStatus||'1099') + '</div></div>'
+      + '<div class="flex gap-1.5 flex-shrink-0 ml-2">'
+      + '<button class="btn btn-outline text-xs py-1 px-2" onclick="lmShowEdit(' + i + ')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'
+      + '<button class="btn btn-danger text-xs py-1 px-2" onclick="lmDeleteLoad(' + i + ')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>'
+      + '</div></div>'
+      + '<div class="grid grid-cols-3 gap-2">'
+      + '<div class="rounded-lg p-2.5 text-center" style="background:rgba(245,166,35,.08);"><div style="font-size:0.6rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Gross</div><div class="font-bold text-sm" style="color:var(--amber);">' + fmt(gross) + '</div></div>'
+      + '<div class="rounded-lg p-2.5 text-center" style="background:rgba(239,68,68,.08);"><div style="font-size:0.6rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Deductions</div><div class="font-bold text-sm" style="color:var(--red);">' + fmt(ded) + '</div></div>'
+      + '<div class="rounded-lg p-2.5 text-center" style="background:' + (net>=0?'rgba(52,211,153,.08)':'rgba(239,68,68,.08)') + ';"><div style="font-size:0.6rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Net Pay</div><div class="font-bold text-sm" style="color:' + netColor + ';">' + fmt(net) + '</div></div>'
+      + '</div></div>';
+    return desktop + mobile;
+  }).join('');
+}
+
 // ========== INIT ==========
 function init() {
   // Set today's date in header
@@ -1212,6 +1668,7 @@ function init() {
   renderFuel();
   renderExpenses();
   renderHistory();
+  lmRenderList();
   recalcAll();
 
   // Register service worker for PWA

@@ -4,17 +4,12 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve Vue build if it exists, otherwise fallback to root index.html
+// Serve Vue build
 const vueDist = path.join(__dirname, 'vue-app', 'dist');
-const servePath = fs.existsSync(vueDist) ? vueDist : __dirname;
-const indexFile = fs.existsSync(path.join(vueDist, 'index.html'))
-  ? path.join(vueDist, 'index.html')
-  : path.join(__dirname, 'index.html');
-
-app.use(express.static(servePath));
+app.use(express.static(vueDist));
 
 app.get('*', (req, res) => {
-  res.sendFile(indexFile);
+  res.sendFile(path.join(vueDist, 'index.html'));
 });
 
 const os = require('os');

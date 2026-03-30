@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunshine Trans INC - Payroll Dashboard</title>
+  <meta name="description" content="Driver payroll management system for Sunshine Trans INC" />
+  <meta name="theme-color" content="#1e3a8a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Sunshine Trans" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Rajdhani', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554' },
+            surface: { light:'#F5F7FB', card:'#ffffff', border:'#e5e7eb' },
+            sunshine: { gold:'#FFC000', green:'#A8D08D', red:'#FF0000', teal:'#134F5C', blue:'#00B0F0' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body { font-family:'Rajdhani',system-ui,sans-serif; background:#F5F7FB; overscroll-behavior-y:contain;
+      padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom); }
+    .safe-bottom { padding-bottom:max(0.75rem, env(safe-area-inset-bottom)); }
+    input[type="number"],input[type="text"],input[type="date"],input[type="email"],select,textarea {
+      font-family:inherit; font-size:0.95rem; padding:0.45rem 0.7rem; border:1px solid #d1d5db;
+      border-radius:0.5rem; outline:none; transition:border-color .2s,box-shadow .2s; width:100%; background:#fff;
+    }
+    input:focus,select:focus,textarea:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+    input[type="number"] { -moz-appearance:textfield; }
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+    .sidebar-link { display:flex; align-items:center; gap:0.5rem; padding:0.55rem 1rem; font-size:0.95rem;
+      color:#fff; transition:all .15s; border-bottom:1px solid rgba(255,255,255,.08);
+      border-top:1px solid rgba(0,0,0,.15); cursor:pointer; text-decoration:none; }
+    .sidebar-link:hover { background:#1e40af; }
+    .sidebar-link.active { background:#fff; color:#1e3a8a; font-weight:600; }
+    .sidebar-link.active svg { stroke:#1e3a8a; }
+    .card { background:#fff; border-radius:0.75rem; border:1px solid #e5e7eb; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+    .card-header { padding:0.75rem 1.25rem; border-bottom:1px solid #e5e7eb; font-weight:600; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem; }
+    .card-body { padding:1.25rem; }
+    .btn { display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem; border-radius:0.5rem;
+      font-family:inherit; font-weight:600; font-size:0.9rem; cursor:pointer; border:1px solid transparent;
+      transition:all .15s; text-decoration:none; }
+    .btn-primary { background:#1e3a8a; color:#fff; }
+    .btn-primary:hover { background:#1d4ed8; }
+    .btn-success { background:#16a34a; color:#fff; }
+    .btn-success:hover { background:#15803d; }
+    .btn-danger { background:#dc2626; color:#fff; }
+    .btn-danger:hover { background:#b91c1c; }
+    .btn-outline { background:transparent; border-color:#d1d5db; color:#374151; }
+    .btn-outline:hover { background:#f3f4f6; }
+    .btn-gold { background:#FFC000; color:#1e3a8a; }
+    .btn-gold:hover { background:#e6ad00; }
+    .stat-card { text-align:center; padding:1.25rem; border-radius:0.75rem; }
+    .label { font-size:0.8rem; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.25rem; }
+    .field-group { margin-bottom:0.85rem; }
+    .table-row { display:grid; grid-template-columns:2fr 1fr 1fr; gap:0.5rem; align-items:center; padding:0.4rem 0;
+      border-bottom:1px solid #f3f4f6; }
+    .table-row:last-child { border-bottom:none; }
+    .expense-row { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; align-items:center; padding:0.35rem 0;
+      border-bottom:1px solid #f3f4f6; }
+    .toast { position:fixed; top:1.5rem; right:1.5rem; z-index:9999; padding:0.85rem 1.25rem; border-radius:0.75rem;
+      color:#fff; font-weight:600; font-size:0.95rem; box-shadow:0 10px 30px rgba(0,0,0,.2);
+      transform:translateX(120%); transition:transform .35s cubic-bezier(.4,0,.2,1); }
+    .toast.show { transform:translateX(0); }
+    .toast-success { background:#16a34a; }
+    .toast-error { background:#dc2626; }
+    .toast-info { background:#2563eb; }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1000; display:flex;
+      align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .modal-overlay.open { opacity:1; pointer-events:auto; }
+    .modal-box { background:#fff; border-radius:1rem; width:95%; max-width:540px; max-height:85vh;
+      overflow-y:auto; box-shadow:0 25px 60px rgba(0,0,0,.25); transform:scale(.92); transition:transform .25s; }
+    .modal-overlay.open .modal-box { transform:scale(1); }
+    .badge { display:inline-flex; padding:0.15rem 0.55rem; border-radius:9999px; font-size:0.75rem; font-weight:600; }
+    @media print {
+      .no-print { display:none !important; }
+      body { background:#fff; }
+      .print-break { page-break-before:always; }
+    }
+    @media (max-width:1023px) {
+      .desktop-sidebar { transform:translateX(-100%); transition:transform .3s; }
+      .desktop-sidebar.open { transform:translateX(0); }
+      main { padding:0.75rem !important; padding-top:3.5rem !important; }
+    }
+    @media (max-width:639px) {
+      main { padding:0.5rem !important; padding-top:3.5rem !important; }
+      .card-body { padding:0.85rem; }
+      .card-header { padding:0.6rem 0.85rem; font-size:1rem; }
+      .stat-card { padding:0.85rem; }
+      .stat-card .text-3xl { font-size:1.5rem; }
+      .btn { padding:0.4rem 0.75rem; font-size:0.82rem; }
+      h2.text-2xl { font-size:1.35rem !important; }
+      .table-row { grid-template-columns:1.5fr 1fr auto; gap:0.35rem; font-size:0.9rem; }
+      .expense-row { gap:0.35rem; }
+      .date-picker-grid { grid-template-columns:1fr; }
+      .date-preset-btn { padding:0.3rem 0.6rem; font-size:0.7rem; }
+      .toast { left:0.75rem; right:0.75rem; top:auto; bottom:1rem; transform:translateY(120%); }
+      .toast.show { transform:translateY(0); }
+    }
+    .date-range-picker { position:relative; }
+    .date-range-field { display:flex; align-items:center; gap:0.5rem; padding:0.45rem 0.7rem; border:1px solid #d1d5db;
+      border-radius:0.5rem; cursor:pointer; background:#fff; transition:border-color .2s,box-shadow .2s; font-size:0.95rem; }
+    .date-range-field:hover { border-color:#93c5fd; }
+    .date-range-field:focus-within,.date-range-field.active { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+    .date-picker-dropdown { position:absolute; top:calc(100% + 6px); left:0; right:0; background:#fff; border:1px solid #e5e7eb;
+      border-radius:0.75rem; box-shadow:0 12px 36px rgba(0,0,0,.12); padding:1rem; z-index:100;
+      opacity:0; pointer-events:none; transform:translateY(-6px); transition:all .2s ease; }
+    .date-picker-dropdown.open { opacity:1; pointer-events:auto; transform:translateY(0); }
+    .date-picker-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem; }
+    .date-picker-presets { display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.75rem; }
+    .date-preset-btn { padding:0.25rem 0.65rem; border-radius:9999px; border:1px solid #e5e7eb; background:#f9fafb;
+      font-size:0.75rem; font-weight:600; font-family:inherit; color:#4b5563; cursor:pointer; transition:all .15s; }
+    .date-preset-btn:hover { background:#1e3a8a; color:#fff; border-color:#1e3a8a; }
+    .fade-in { animation:fadeIn .35s ease-out; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .animate-pulse-slow { animation:pulse 2s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast"></div>
+
+<!-- PWA Install Banner -->
+<div id="pwaInstallBar" class="hidden fixed bottom-0 left-0 right-0 z-[70] bg-blue-900 text-white px-4 py-3 flex items-center justify-between gap-3 shadow-[0_-4px_20px_rgba(0,0,0,.2)] safe-bottom">
+  <div class="flex items-center gap-2 min-w-0">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFC000" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg>
+    <span class="text-sm font-semibold truncate">Install Sunshine Payroll for quick access</span>
+  </div>
+  <div class="flex gap-2 flex-shrink-0">
+    <button class="btn text-xs py-1 px-3 bg-white text-blue-900 font-bold rounded-lg" onclick="installPWA()">Install</button>
+    <button class="text-white/60 hover:text-white p-1" onclick="dismissInstall()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ==================== SIDEBAR ==================== -->
+<aside id="sidebar" class="desktop-sidebar fixed top-0 left-0 h-full w-64 z-50 flex flex-col lg:translate-x-0" style="background:#1e3a8a;">
+  <!-- Logo Area -->
+  <div class="py-4 px-4 flex items-center justify-center gap-2 border-b border-blue-800">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFC000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+    <span class="text-white font-bold text-lg tracking-wide">SUNSHINE TRANS</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 flex flex-col pt-1" id="sidebarNav">
+    <a class="sidebar-link active" data-page="dashboard" onclick="switchPage('dashboard')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="sidebar-link" data-page="paystub" onclick="switchPage('paystub')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Pay Stub
+    </a>
+    <a class="sidebar-link" data-page="loads" onclick="switchPage('loads')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      Loads & Revenue
+    </a>
+    <a class="sidebar-link" data-page="expenses" onclick="switchPage('expenses')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Expenses & Fuel
+    </a>
+    <a class="sidebar-link" data-page="timeoff" onclick="switchPage('timeoff')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Time Off
+    </a>
+    <a class="sidebar-link" data-page="history" onclick="switchPage('history')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Pay History
+    </a>
+    <a class="sidebar-link" data-page="email" onclick="switchPage('email')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email Summary
+    </a>
+    <a class="sidebar-link" data-page="settings" onclick="switchPage('settings')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="px-4 py-3 border-t border-blue-800 text-blue-200 text-xs text-center">
+    &copy; 2024 Sunshine Trans INC
+  </div>
+</aside>
+
+<!-- Mobile Menu Toggle -->
+<button id="mobileMenuBtn" class="lg:hidden fixed top-2 left-2 z-[60] bg-blue-900 text-white p-2 rounded-lg shadow-lg no-print" onclick="toggleSidebar()">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<!-- Mobile Overlay -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<main class="min-h-screen lg:ml-64 p-4">
+
+  <!-- Welcome Header -->
+  <header class="card mb-4 no-print" style="border-color:#1e3a8a; border-width:1px;">
+    <div class="p-2 sm:p-3 flex items-center gap-2 sm:gap-3 flex-wrap">
+      <div class="h-9 w-9 sm:h-11 sm:w-11 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-lg uppercase flex-shrink-0" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">
+        <span id="headerInitials">DB</span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-base sm:text-xl font-bold text-gray-900 truncate">Welcome back, <span id="headerName">Daniel Beliard</span></h1>
+        <div class="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-0.5 text-xs sm:text-sm text-gray-500">
+          <span id="headerDate" class="hidden sm:inline">March 29, 2026</span>
+          <span class="hidden sm:inline">&bull;</span>
+          <span>Pay Period: <strong id="headerPeriod">06/01/24 - 06/30/24</strong></span>
+          <span class="hidden xs:inline">&bull;</span>
+          <span class="badge bg-green-100 text-green-700" id="headerTaxBadge">1099</span>
+        </div>
+      </div>
+      <button class="btn btn-outline text-xs sm:text-sm py-1.5 px-2 sm:px-3 flex-shrink-0" onclick="switchPage('settings')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68"/></svg>
+        <span class="hidden sm:inline">Settings</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- PAGE: Dashboard -->
+  <div id="page-dashboard" class="page fade-in">
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+      <div class="card stat-card" style="border-left:4px solid #FFC000;">
+        <div class="label">Total Gross Pay</div>
+        <div class="text-3xl font-bold text-gray-900" id="statGross">$2,200.00</div>
+      </div>
+      <div class="card stat-card" style="border-left:4px solid #dc2626;">
+        <div class="label">Total Deductions</div>
+        <div class="text-3xl font-bold text-red-600" id="statDeductions">$3,685.00</div>
+      </div>
+      <div class="card stat-card" style="border-left:4px solid #2563eb;">
+        <div class="label">Driver Pay (20%)</div>
+        <div class="text-3xl font-bold text-blue-700" id="statDriverPay">$440.00</div>
+      </div>
+      <div class="card stat-card" style="border-left:4px solid #16a34a;">
+        <div class="label">Total Net Pay</div>
+        <div class="text-3xl font-bold" id="statNet" style="color:#16a34a;">-$1,485.00</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <h2 class="text-xl font-bold text-gray-900 mb-3">Quick Actions</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="card p-5 cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all" onclick="switchPage('paystub')">
+        <div class="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center mb-3">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3 class="font-bold text-lg text-gray-900">View Pay Stub</h3>
+        <p class="text-sm text-gray-500">Review current period pay details</p>
+      </div>
+      <div class="card p-5 cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all" onclick="switchPage('loads')">
+        <div class="w-11 h-11 rounded-xl bg-amber-100 flex items-center justify-center mb-3">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <h3 class="font-bold text-lg text-gray-900">Manage Loads</h3>
+        <p class="text-sm text-gray-500">Add or edit load information</p>
+      </div>
+      <div class="card p-5 cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all" onclick="exportPDF()">
+        <div class="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center mb-3">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <h3 class="font-bold text-lg text-gray-900">Export Report</h3>
+        <p class="text-sm text-gray-500">Download pay stub as PDF</p>
+      </div>
+    </div>
+
+    <!-- Summary Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Expense Breakdown Chart (visual bar) -->
+      <div class="card">
+        <div class="card-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Expense Breakdown
+        </div>
+        <div class="card-body" id="expenseChart"></div>
+      </div>
+      <!-- Recent Activity -->
+      <div class="card">
+        <div class="card-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Messages & Notes
+        </div>
+        <div class="card-body">
+          <textarea id="messagesArea" class="w-full" rows="5" placeholder="Add notes or messages for this pay period..."></textarea>
+          <button class="btn btn-primary mt-2 text-sm" onclick="saveMessages()">Save Note</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Pay Stub -->
+  <div id="page-paystub" class="page hidden">
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <h2 class="text-2xl font-bold text-gray-900">Pay Stub</h2>
+      <div class="flex gap-2">
+        <button class="btn btn-gold no-print" onclick="exportPDF()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export PDF
+        </button>
+        <button class="btn btn-primary no-print" onclick="switchPage('email')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Email
+        </button>
+      </div>
+    </div>
+
+    <!-- Printable Pay Stub -->
+    <div id="paystubPrintable" class="card">
+      <!-- Company Header -->
+      <div class="p-6 text-center" style="background:linear-gradient(135deg,#00B0F0,#0088cc); border-radius:0.75rem 0.75rem 0 0;">
+        <h1 class="text-3xl font-bold text-white tracking-wider">SUNSHINE TRANS INC</h1>
+      </div>
+
+      <div class="card-body">
+        <!-- Employee Info Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="space-y-2">
+            <div class="flex gap-2 items-center">
+              <span class="label w-36 mb-0">PAYEE NAME</span>
+              <span class="font-semibold text-gray-900" id="stubPayee">Daniel Beliard</span>
+            </div>
+            <div class="flex gap-2 items-center">
+              <span class="label w-36 mb-0">PAYMENT DATE</span>
+              <span class="font-semibold text-gray-900" id="stubDate">06/01/24 - 06/30/24</span>
+            </div>
+            <div class="flex gap-2 items-center">
+              <span class="label w-36 mb-0">PAYMENT METHOD</span>
+              <span class="font-semibold text-gray-900" id="stubMethod">Monthly</span>
+            </div>
+            <div class="flex gap-2 items-center">
+              <span class="label w-36 mb-0">PAY RATE</span>
+              <span class="font-semibold text-gray-900" id="stubRate">20%</span>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex gap-2 items-center">
+              <span class="label w-36 mb-0">TAX STATUS</span>
+              <span class="font-semibold text-gray-900" id="stubTax">1099</span>
+            </div>
+            <div class="flex gap-2 items-center">
+              <span class="label w-36 mb-0">ALLOWANCES</span>
+              <span class="font-semibold text-gray-900" id="stubAllow">0</span>
+            </div>
+            <div class="flex gap-2 items-center">
+              <span class="label w-36 mb-0">ADDITIONAL %</span>
+              <span class="font-semibold text-gray-900" id="stubAddPct">0.00%</span>
+            </div>
+            <div class="flex gap-2 items-center">
+              <span class="label w-36 mb-0">ADDITIONAL AMT</span>
+              <span class="font-semibold text-gray-900" id="stubAddAmt">$0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loads / Fuel / Expense / Net Pay Table -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+          <!-- Loads -->
+          <div class="rounded-lg overflow-hidden border border-gray-200">
+            <div class="text-center py-2 font-bold text-sm text-white" style="background:#FFC000; color:#1e3a8a;">LOADS INFO</div>
+            <div class="p-3" id="stubLoads"></div>
+          </div>
+          <!-- Fuel -->
+          <div class="rounded-lg overflow-hidden border border-gray-200">
+            <div class="text-center py-2 font-bold text-sm text-white" style="background:#EC3314;">FUEL</div>
+            <div class="p-3" id="stubFuel"></div>
+          </div>
+          <!-- Expenses -->
+          <div class="rounded-lg overflow-hidden border border-gray-200">
+            <div class="text-center py-2 font-bold text-sm text-white" style="background:#EC3314;">EXPENSES</div>
+            <div class="p-3" id="stubExpenses"></div>
+          </div>
+          <!-- Net Pay -->
+          <div class="rounded-lg overflow-hidden border border-gray-200">
+            <div class="text-center py-2 font-bold text-sm text-white" style="background:#FFFF00; color:#1e3a8a;">NET PAY</div>
+            <div class="p-3" id="stubNetPay"></div>
+          </div>
+        </div>
+
+        <!-- Totals Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div class="rounded-lg text-center p-4" style="background:#134F5C;">
+            <div class="text-xs font-bold text-white/70 uppercase mb-1">Total Gross Pay</div>
+            <div class="text-2xl font-bold text-yellow-300" id="stubTotalGross">$2,200.00</div>
+          </div>
+          <div class="rounded-lg text-center p-4" style="background:#134F5C;">
+            <div class="text-xs font-bold text-white/70 uppercase mb-1">Total Deductions</div>
+            <div class="text-2xl font-bold text-red-400" id="stubTotalDed">$3,685.00</div>
+          </div>
+          <div class="rounded-lg text-center p-4" style="background:#134F5C;">
+            <div class="text-xs font-bold text-white/70 uppercase mb-1">Total Net Pay</div>
+            <div class="text-2xl font-bold text-yellow-300" id="stubTotalNet">-$1,485.00</div>
+          </div>
+        </div>
+
+        <!-- Time Off Balances -->
+        <div class="rounded-lg overflow-hidden border border-gray-200">
+          <div class="text-center py-2 font-bold text-sm text-white" style="background:#134F5C;">TIME-OFF BALANCES</div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+            <div><span class="label">Vacation</span><span class="font-bold text-gray-900" id="stubVacation">0</span></div>
+            <div><span class="label">Personal Day</span><span class="font-bold text-gray-900" id="stubPersonal">0</span></div>
+            <div><span class="label">Sick Leave</span><span class="font-bold text-gray-900" id="stubSick">0</span></div>
+            <div><span class="label">Medical Leave</span><span class="font-bold text-gray-900" id="stubMedical">0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Loads & Revenue -->
+  <div id="page-loads" class="page hidden">
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <h2 class="text-2xl font-bold text-gray-900">Loads & Revenue</h2>
+      <button class="btn btn-primary" onclick="addLoad()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Load
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-row font-bold text-sm text-gray-500 uppercase" style="border-bottom:2px solid #e5e7eb;">
+          <span>Load / Route Description</span>
+          <span class="text-right">Amount ($)</span>
+          <span class="text-right">Actions</span>
+        </div>
+        <div id="loadsContainer"></div>
+        <div class="table-row font-bold text-lg mt-2 pt-3" style="border-top:2px solid #1e3a8a;">
+          <span class="text-gray-900">TOTAL</span>
+          <span class="text-right text-amber-600" id="loadsTotalDisplay">$2,200.00</span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Expenses & Fuel -->
+  <div id="page-expenses" class="page hidden">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Expenses & Fuel</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Fuel -->
+      <div class="card">
+        <div class="card-header" style="background:#EC3314; color:#fff; border-radius:0.75rem 0.75rem 0 0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M13 10h4a2 2 0 0 1 2 2v8"/><path d="M19 14v-2"/><circle cx="8" cy="10" r="2"/></svg>
+          Fuel Entries
+        </div>
+        <div class="card-body">
+          <div id="fuelContainer"></div>
+          <button class="btn btn-outline mt-3 w-full justify-center text-sm" onclick="addFuel()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Fuel Entry
+          </button>
+          <div class="flex justify-between items-center mt-3 pt-3 border-t font-bold">
+            <span class="text-gray-900">Total Fuel</span>
+            <span class="text-red-600" id="fuelTotalDisplay">$0.00</span>
+          </div>
+        </div>
+      </div>
+      <!-- Expenses -->
+      <div class="card">
+        <div class="card-header" style="background:#EC3314; color:#fff; border-radius:0.75rem 0.75rem 0 0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Expense Deductions
+        </div>
+        <div class="card-body">
+          <div id="expensesContainer"></div>
+          <button class="btn btn-outline mt-3 w-full justify-center text-sm" onclick="addExpense()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Expense
+          </button>
+          <div class="flex justify-between items-center mt-3 pt-3 border-t font-bold">
+            <span class="text-gray-900">Total Expenses</span>
+            <span class="text-red-600" id="expensesTotalDisplay">$3,685.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Time Off -->
+  <div id="page-timeoff" class="page hidden">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Time-Off Balances</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="card p-5">
+        <div class="label">Vacation</div>
+        <input type="number" id="toVacation" value="0" min="0" onchange="recalcAll()"/>
+      </div>
+      <div class="card p-5">
+        <div class="label">Personal Day</div>
+        <input type="number" id="toPersonal" value="0" min="0" onchange="recalcAll()"/>
+      </div>
+      <div class="card p-5">
+        <div class="label">Sick Leave</div>
+        <input type="number" id="toSick" value="0" min="0" onchange="recalcAll()"/>
+      </div>
+      <div class="card p-5">
+        <div class="label">Medical Leave</div>
+        <input type="number" id="toMedical" value="0" min="0" onchange="recalcAll()"/>
+      </div>
+    </div>
+    <button class="btn btn-primary mt-4" onclick="saveData(); showToast('Time-off balances saved','success')">Save Balances</button>
+  </div>
+
+  <!-- PAGE: Pay History -->
+  <div id="page-history" class="page hidden">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Pay History</h2>
+    <div class="card">
+      <div class="card-body">
+        <div id="historyList"></div>
+        <div id="historyEmpty" class="text-center py-12 text-gray-400">
+          <svg width="48" height="48" class="mx-auto mb-3 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <p class="text-lg font-semibold">No history yet</p>
+          <p class="text-sm">Saved pay stubs will appear here</p>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-success mt-4" onclick="saveToHistory()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save Current Period to History
+    </button>
+  </div>
+
+  <!-- PAGE: Email Summary -->
+  <div id="page-email" class="page hidden">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Email Pay Summary</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="card">
+        <div class="card-header">Compose Email</div>
+        <div class="card-body space-y-3">
+          <div class="field-group">
+            <div class="label">Recipient Email</div>
+            <input type="email" id="emailTo" placeholder="driver@email.com"/>
+          </div>
+          <div class="field-group">
+            <div class="label">CC (optional)</div>
+            <input type="email" id="emailCc" placeholder="accounting@sunshine.com"/>
+          </div>
+          <div class="field-group">
+            <div class="label">Subject</div>
+            <input type="text" id="emailSubject"/>
+          </div>
+          <div class="field-group">
+            <div class="label">Message</div>
+            <textarea id="emailBody" rows="10" class="font-mono text-sm"></textarea>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn btn-primary" onclick="sendEmail()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Send Email
+            </button>
+            <button class="btn btn-outline" onclick="generateEmailBody()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              Regenerate
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">Email Preview</div>
+        <div class="card-body">
+          <div id="emailPreview" class="bg-gray-50 rounded-lg p-4 text-sm font-mono whitespace-pre-wrap min-h-[300px] border border-gray-200"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Settings -->
+  <div id="page-settings" class="page hidden">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Settings</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Employee Info -->
+      <div class="card">
+        <div class="card-header">Employee Information</div>
+        <div class="card-body space-y-3">
+          <div class="field-group">
+            <div class="label">Payee Name</div>
+            <input type="text" id="setPayeeName" value="Daniel Beliard" onchange="recalcAll()"/>
+          </div>
+          <div class="field-group">
+            <div class="label">Payment Date / Period</div>
+            <div class="date-range-picker">
+              <div class="date-range-field" onclick="toggleDatePicker()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" class="flex-shrink-0"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span id="dateRangeDisplay" class="flex-1 truncate">06/01/24 - 06/30/24</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div id="datePickerDropdown" class="date-picker-dropdown">
+                <div class="date-picker-grid">
+                  <!-- Start Date -->
+                  <div>
+                    <div class="text-xs font-bold text-gray-500 uppercase mb-1.5">Start Date</div>
+                    <input type="date" id="dateStart" onchange="updateDateRange()"/>
+                  </div>
+                  <!-- End Date -->
+                  <div>
+                    <div class="text-xs font-bold text-gray-500 uppercase mb-1.5">End Date</div>
+                    <input type="date" id="dateEnd" onchange="updateDateRange()"/>
+                  </div>
+                </div>
+                <div class="date-picker-presets">
+                  <button class="date-preset-btn" onclick="setDatePreset('thisMonth')">This Month</button>
+                  <button class="date-preset-btn" onclick="setDatePreset('lastMonth')">Last Month</button>
+                  <button class="date-preset-btn" onclick="setDatePreset('biweekly')">Last 2 Weeks</button>
+                  <button class="date-preset-btn" onclick="setDatePreset('thisWeek')">This Week</button>
+                </div>
+                <div class="flex justify-end pt-2 border-t border-gray-100">
+                  <button class="btn btn-primary text-xs py-1" onclick="applyDateRange()">Apply</button>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="setPaymentDate" value="06/01/24-06/30/24"/>
+          </div>
+          <div class="field-group">
+            <div class="label">Payment Method</div>
+            <select id="setPaymentMethod" onchange="recalcAll()">
+              <option value="Monthly" selected>Monthly</option>
+              <option value="Bi-Weekly">Bi-Weekly</option>
+              <option value="Weekly">Weekly</option>
+              <option value="Per Load">Per Load</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <div class="label">Pay Rate (%)</div>
+            <input type="number" id="setPayRate" value="20" min="0" max="100" step="1" onchange="recalcAll()"/>
+          </div>
+        </div>
+      </div>
+      <!-- Tax & Additional -->
+      <div class="card">
+        <div class="card-header">Tax & Additional Pay</div>
+        <div class="card-body space-y-3">
+          <div class="field-group">
+            <div class="label">Tax Status</div>
+            <select id="setTaxStatus" onchange="recalcAll()">
+              <option value="1099" selected>1099 (Independent Contractor)</option>
+              <option value="W-2">W-2 (Employee)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <div class="label">Allowances</div>
+            <input type="number" id="setAllowances" value="0" min="0" onchange="recalcAll()"/>
+          </div>
+          <div class="field-group">
+            <div class="label">Additional %</div>
+            <input type="number" id="setAdditionalPct" value="0" min="0" max="100" step="0.01" onchange="recalcAll()"/>
+          </div>
+          <div class="field-group">
+            <div class="label">Additional Amount ($)</div>
+            <input type="number" id="setAdditionalAmt" value="0" min="0" step="0.01" onchange="recalcAll()"/>
+          </div>
+        </div>
+      </div>
+      <!-- Company Info -->
+      <div class="card">
+        <div class="card-header">Company Information</div>
+        <div class="card-body space-y-3">
+          <div class="field-group">
+            <div class="label">Company Name</div>
+            <input type="text" id="setCompanyName" value="SUNSHINE TRANS INC"/>
+          </div>
+          <div class="field-group">
+            <div class="label">Company Email</div>
+            <input type="email" id="setCompanyEmail" value=""/>
+          </div>
+          <div class="field-group">
+            <div class="label">Company Phone</div>
+            <input type="text" id="setCompanyPhone" value=""/>
+          </div>
+        </div>
+      </div>
+      <!-- Email Settings -->
+      <div class="card">
+        <div class="card-header">Email Configuration</div>
+        <div class="card-body space-y-3">
+          <div class="field-group">
+            <div class="label">Default Recipient</div>
+            <input type="email" id="setDefaultEmail" value=""/>
+          </div>
+          <div class="field-group">
+            <div class="label">CC Email</div>
+            <input type="email" id="setCcEmail" value=""/>
+          </div>
+          <div class="field-group">
+            <div class="label">Email Provider</div>
+            <select id="setEmailProvider">
+              <option value="mailto">Default Mail Client (mailto)</option>
+              <option value="gmail">Gmail</option>
+              <option value="outlook">Outlook</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-4">
+      <button class="btn btn-primary" onclick="saveSettings()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save All Settings
+      </button>
+      <button class="btn btn-danger" onclick="if(confirm('Reset all data to defaults?')){localStorage.clear();location.reload();}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Reset All Data
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+// ========== STATE ==========
+const DEFAULT_LOADS = [
+  { name: 'Well Logistics INC (NY-FL)', amount: 2200 }
+];
+const DEFAULT_FUEL = [];
+const DEFAULT_EXPENSES = [
+  { name: 'Driver', amount: 0, isDriverPay: true },
+  { name: 'Insurance', amount: 1500 },
+  { name: 'ELD Log', amount: 150 },
+  { name: 'Oil Change', amount: 900 },
+  { name: 'Trailer', amount: 695 },
+  { name: 'Shower', amount: 0 },
+  { name: 'Scale', amount: 0 },
+  { name: 'Food', amount: 0 },
+  { name: 'Toll', amount: 0 },
+  { name: 'Tire', amount: 0 },
+  { name: 'Maintenance', amount: 0 },
+];
+
+let state = loadState();
+
+function getDefaultState() {
+  return {
+    loads: JSON.parse(JSON.stringify(DEFAULT_LOADS)),
+    fuel: JSON.parse(JSON.stringify(DEFAULT_FUEL)),
+    expenses: JSON.parse(JSON.stringify(DEFAULT_EXPENSES)),
+    timeOff: { vacation: 0, personal: 0, sick: 0, medical: 0 },
+    settings: {
+      payeeName: 'Daniel Beliard', paymentDate: '06/01/24-06/30/24', paymentMethod: 'Monthly',
+      payRate: 20, taxStatus: '1099', allowances: 0, additionalPct: 0, additionalAmt: 0,
+      companyName: 'SUNSHINE TRANS INC', companyEmail: '', companyPhone: '',
+      defaultEmail: '', ccEmail: '', emailProvider: 'mailto'
+    },
+    history: [],
+    messages: ''
+  };
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('sunshine_payroll');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      const def = getDefaultState();
+      // Merge to ensure no missing keys
+      return { ...def, ...parsed, settings: { ...def.settings, ...(parsed.settings || {}) }, timeOff: { ...def.timeOff, ...(parsed.timeOff || {}) } };
+    }
+  } catch(e) {}
+  return getDefaultState();
+}
+
+function saveData() {
+  // Collect from UI
+  state.timeOff = {
+    vacation: parseFloat(document.getElementById('toVacation').value) || 0,
+    personal: parseFloat(document.getElementById('toPersonal').value) || 0,
+    sick: parseFloat(document.getElementById('toSick').value) || 0,
+    medical: parseFloat(document.getElementById('toMedical').value) || 0,
+  };
+  state.messages = document.getElementById('messagesArea').value;
+  localStorage.setItem('sunshine_payroll', JSON.stringify(state));
+}
+
+// ========== DATE RANGE PICKER ==========
+function toggleDatePicker() {
+  const dd = document.getElementById('datePickerDropdown');
+  const field = document.querySelector('.date-range-field');
+  const isOpen = dd.classList.contains('open');
+  dd.classList.toggle('open');
+  field.classList.toggle('active');
+  if (!isOpen) initDateInputs();
+}
+
+function initDateInputs() {
+  const current = state.settings.paymentDate;
+  const parts = current.split('-').map(s => s.trim().replace(/\//g, '/'));
+  // Try to parse "MM/DD/YY" into "YYYY-MM-DD"
+  function parseShort(str) {
+    const m = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+    if (!m) return '';
+    const year = m[3].length === 2 ? '20' + m[3] : m[3];
+    return `${year}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;
+  }
+  if (parts.length >= 2) {
+    document.getElementById('dateStart').value = parseShort(parts[0]);
+    document.getElementById('dateEnd').value = parseShort(parts[1]);
+  }
+}
+
+function updateDateRange() {
+  const s = document.getElementById('dateStart').value;
+  const e = document.getElementById('dateEnd').value;
+  if (s && e) {
+    const display = formatDateShort(s) + ' - ' + formatDateShort(e);
+    document.getElementById('dateRangeDisplay').textContent = display;
+  }
+}
+
+function applyDateRange() {
+  const s = document.getElementById('dateStart').value;
+  const e = document.getElementById('dateEnd').value;
+  if (!s || !e) { showToast('Please select both dates', 'error'); return; }
+  if (new Date(s) > new Date(e)) { showToast('Start date must be before end date', 'error'); return; }
+  const display = formatDateShort(s) + '-' + formatDateShort(e);
+  state.settings.paymentDate = display;
+  document.getElementById('setPaymentDate').value = display;
+  document.getElementById('dateRangeDisplay').textContent = formatDateShort(s) + ' - ' + formatDateShort(e);
+  document.getElementById('datePickerDropdown').classList.remove('open');
+  document.querySelector('.date-range-field').classList.remove('active');
+  recalcAll();
+  showToast('Pay period updated', 'success');
+}
+
+function setDatePreset(type) {
+  const now = new Date();
+  let start, end;
+  if (type === 'thisMonth') {
+    start = new Date(now.getFullYear(), now.getMonth(), 1);
+    end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  } else if (type === 'lastMonth') {
+    start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    end = new Date(now.getFullYear(), now.getMonth(), 0);
+  } else if (type === 'biweekly') {
+    end = new Date(now);
+    start = new Date(now); start.setDate(start.getDate() - 13);
+  } else if (type === 'thisWeek') {
+    const day = now.getDay();
+    start = new Date(now); start.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
+    end = new Date(start); end.setDate(start.getDate() + 6);
+  }
+  document.getElementById('dateStart').value = toISODate(start);
+  document.getElementById('dateEnd').value = toISODate(end);
+  updateDateRange();
+}
+
+function toISODate(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function formatDateShort(iso) {
+  const [y, m, d] = iso.split('-');
+  return m + '/' + d + '/' + y.slice(-2);
+}
+
+// Close picker on outside click
+document.addEventListener('click', function(e) {
+  const picker = document.querySelector('.date-range-picker');
+  if (picker && !picker.contains(e.target)) {
+    document.getElementById('datePickerDropdown').classList.remove('open');
+    document.querySelector('.date-range-field').classList.remove('active');
+  }
+});
+
+function saveSettings() {
+  state.settings.payeeName = document.getElementById('setPayeeName').value;
+  state.settings.paymentDate = document.getElementById('setPaymentDate').value;
+  state.settings.paymentMethod = document.getElementById('setPaymentMethod').value;
+  state.settings.payRate = parseFloat(document.getElementById('setPayRate').value) || 0;
+  state.settings.taxStatus = document.getElementById('setTaxStatus').value;
+  state.settings.allowances = parseFloat(document.getElementById('setAllowances').value) || 0;
+  state.settings.additionalPct = parseFloat(document.getElementById('setAdditionalPct').value) || 0;
+  state.settings.additionalAmt = parseFloat(document.getElementById('setAdditionalAmt').value) || 0;
+  state.settings.companyName = document.getElementById('setCompanyName').value;
+  state.settings.companyEmail = document.getElementById('setCompanyEmail').value;
+  state.settings.companyPhone = document.getElementById('setCompanyPhone').value;
+  state.settings.defaultEmail = document.getElementById('setDefaultEmail').value;
+  state.settings.ccEmail = document.getElementById('setCcEmail').value;
+  state.settings.emailProvider = document.getElementById('setEmailProvider').value;
+  saveData();
+  recalcAll();
+  showToast('Settings saved successfully', 'success');
+}
+
+function saveMessages() {
+  state.messages = document.getElementById('messagesArea').value;
+  saveData();
+  showToast('Note saved', 'success');
+}
+
+// ========== CALCULATIONS (mirrors Excel formulas) ==========
+function getLoadsTotal() { return state.loads.reduce((s, l) => s + (parseFloat(l.amount) || 0), 0); }
+function getFuelTotal() { return state.fuel.reduce((s, f) => s + (parseFloat(f.amount) || 0), 0); }
+function getDriverPay() {
+  // =B25*B5 => loadsTotal * payRate
+  return getLoadsTotal() * (state.settings.payRate / 100);
+}
+function getExpensesTotal() {
+  // Sum of all expense amounts, but driver pay = calculated
+  return state.expenses.reduce((s, e) => {
+    if (e.isDriverPay) return s + getDriverPay();
+    return s + (parseFloat(e.amount) || 0);
+  }, 0);
+}
+function getTotalDeductions() {
+  // =D25+F25 => fuelTotal + expensesTotal
+  return getFuelTotal() + getExpensesTotal();
+}
+function getGrossPay() { return getLoadsTotal(); }
+function getNetPay() {
+  // =A32-C32 => grossPay - totalDeductions
+  return getGrossPay() - getTotalDeductions();
+}
+
+function fmt(n) {
+  const abs = Math.abs(n);
+  const str = '$' + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return n < 0 ? '-' + str : str;
+}
+
+// ========== RECALCULATE & RENDER ==========
+function recalcAll() {
+  saveData();
+  const gross = getGrossPay();
+  const ded = getTotalDeductions();
+  const net = getNetPay();
+  const driverPay = getDriverPay();
+  const fuelTotal = getFuelTotal();
+  const expTotal = getExpensesTotal();
+
+  // Dashboard stats
+  document.getElementById('statGross').textContent = fmt(gross);
+  document.getElementById('statDeductions').textContent = fmt(ded);
+  document.getElementById('statDriverPay').textContent = fmt(driverPay);
+  document.getElementById('statNet').textContent = fmt(net);
+  document.getElementById('statNet').style.color = net >= 0 ? '#16a34a' : '#dc2626';
+
+  // Header
+  document.getElementById('headerName').textContent = state.settings.payeeName;
+  document.getElementById('headerInitials').textContent = state.settings.payeeName.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  document.getElementById('headerPeriod').textContent = state.settings.paymentDate;
+  document.getElementById('headerTaxBadge').textContent = state.settings.taxStatus;
+
+  // Loads page total
+  document.getElementById('loadsTotalDisplay').textContent = fmt(gross);
+
+  // Expense page totals
+  document.getElementById('fuelTotalDisplay').textContent = fmt(fuelTotal);
+  document.getElementById('expensesTotalDisplay').textContent = fmt(expTotal);
+
+  // Pay Stub
+  document.getElementById('stubPayee').textContent = state.settings.payeeName;
+  document.getElementById('stubDate').textContent = state.settings.paymentDate;
+  document.getElementById('stubMethod').textContent = state.settings.paymentMethod;
+  document.getElementById('stubRate').textContent = state.settings.payRate + '%';
+  document.getElementById('stubTax').textContent = state.settings.taxStatus;
+  document.getElementById('stubAllow').textContent = state.settings.allowances;
+  document.getElementById('stubAddPct').textContent = state.settings.additionalPct.toFixed(2) + '%';
+  document.getElementById('stubAddAmt').textContent = fmt(state.settings.additionalAmt);
+  document.getElementById('stubTotalGross').textContent = fmt(gross);
+  document.getElementById('stubTotalDed').textContent = fmt(ded);
+  document.getElementById('stubTotalNet').textContent = fmt(net);
+  document.getElementById('stubVacation').textContent = state.timeOff.vacation;
+  document.getElementById('stubPersonal').textContent = state.timeOff.personal;
+  document.getElementById('stubSick').textContent = state.timeOff.sick;
+  document.getElementById('stubMedical').textContent = state.timeOff.medical;
+
+  // Stub loads
+  document.getElementById('stubLoads').innerHTML = state.loads.map(l =>
+    `<div class="flex justify-between py-1 text-sm border-b border-gray-100"><span class="truncate mr-2">${esc(l.name)}</span><span class="font-semibold whitespace-nowrap">${fmt(l.amount)}</span></div>`
+  ).join('') + `<div class="flex justify-between pt-2 font-bold text-sm"><span>Total</span><span style="color:#d97706">${fmt(gross)}</span></div>`;
+
+  // Stub fuel
+  document.getElementById('stubFuel').innerHTML = state.fuel.length ? state.fuel.map(f =>
+    `<div class="flex justify-between py-1 text-sm border-b border-gray-100"><span class="truncate mr-2">${esc(f.name)}</span><span class="font-semibold whitespace-nowrap">${fmt(f.amount)}</span></div>`
+  ).join('') + `<div class="flex justify-between pt-2 font-bold text-sm"><span>Total</span><span class="text-red-600">${fmt(fuelTotal)}</span></div>`
+  : '<p class="text-sm text-gray-400 italic">No fuel entries</p>';
+
+  // Stub expenses
+  document.getElementById('stubExpenses').innerHTML = state.expenses.map(e =>
+    `<div class="flex justify-between py-1 text-sm border-b border-gray-100"><span>${esc(e.name)}</span><span class="font-semibold whitespace-nowrap">${fmt(e.isDriverPay ? driverPay : e.amount)}</span></div>`
+  ).join('') + `<div class="flex justify-between pt-2 font-bold text-sm"><span>Total</span><span class="text-red-600">${fmt(expTotal)}</span></div>`;
+
+  // Stub net pay
+  document.getElementById('stubNetPay').innerHTML = `
+    <div class="flex justify-between py-1 text-sm border-b border-gray-100"><span>Gross</span><span class="font-semibold">${fmt(gross)}</span></div>
+    <div class="flex justify-between py-1 text-sm border-b border-gray-100"><span>Deductions</span><span class="font-semibold text-red-600">${fmt(ded)}</span></div>
+    <div class="flex justify-between pt-2 font-bold text-lg"><span>Net</span><span style="color:${net>=0?'#16a34a':'#dc2626'}">${fmt(net)}</span></div>`;
+
+  // Dashboard expense chart
+  renderExpenseChart();
+
+  // Settings fields
+  document.getElementById('setPayeeName').value = state.settings.payeeName;
+  document.getElementById('setPaymentDate').value = state.settings.paymentDate;
+  document.getElementById('dateRangeDisplay').textContent = state.settings.paymentDate.replace('-', ' - ');
+  document.getElementById('setPaymentMethod').value = state.settings.paymentMethod;
+  document.getElementById('setPayRate').value = state.settings.payRate;
+  document.getElementById('setTaxStatus').value = state.settings.taxStatus;
+  document.getElementById('setAllowances').value = state.settings.allowances;
+  document.getElementById('setAdditionalPct').value = state.settings.additionalPct;
+  document.getElementById('setAdditionalAmt').value = state.settings.additionalAmt;
+
+  // Time-off
+  document.getElementById('toVacation').value = state.timeOff.vacation;
+  document.getElementById('toPersonal').value = state.timeOff.personal;
+  document.getElementById('toSick').value = state.timeOff.sick;
+  document.getElementById('toMedical').value = state.timeOff.medical;
+
+  // Messages
+  document.getElementById('messagesArea').value = state.messages || '';
+}
+
+// ========== RENDER LISTS ==========
+function renderLoads() {
+  const c = document.getElementById('loadsContainer');
+  c.innerHTML = state.loads.map((l, i) => `
+    <div class="table-row fade-in">
+      <input type="text" value="${esc(l.name)}" onchange="state.loads[${i}].name=this.value;recalcAll()" placeholder="Route description"/>
+      <input type="number" value="${l.amount}" onchange="state.loads[${i}].amount=parseFloat(this.value)||0;recalcAll()" min="0" step="0.01" class="text-right"/>
+      <div class="text-right">
+        <button class="btn btn-danger text-xs py-1 px-2" onclick="state.loads.splice(${i},1);renderLoads();recalcAll()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function renderFuel() {
+  const c = document.getElementById('fuelContainer');
+  c.innerHTML = state.fuel.map((f, i) => `
+    <div class="expense-row fade-in">
+      <input type="text" value="${esc(f.name)}" onchange="state.fuel[${i}].name=this.value;recalcAll()" placeholder="Fuel stop"/>
+      <div class="flex gap-1">
+        <input type="number" value="${f.amount}" onchange="state.fuel[${i}].amount=parseFloat(this.value)||0;recalcAll()" min="0" step="0.01" class="text-right"/>
+        <button class="btn btn-danger text-xs py-1 px-1.5 flex-shrink-0" onclick="state.fuel.splice(${i},1);renderFuel();recalcAll()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function renderExpenses() {
+  const c = document.getElementById('expensesContainer');
+  c.innerHTML = state.expenses.map((e, i) => `
+    <div class="expense-row fade-in">
+      <input type="text" value="${esc(e.name)}" onchange="state.expenses[${i}].name=this.value;recalcAll()" placeholder="Expense type" ${e.isDriverPay?'disabled style="background:#f0fdf4"':''}/>
+      <div class="flex gap-1">
+        ${e.isDriverPay
+          ? `<input type="text" value="${fmt(getDriverPay())}" disabled class="text-right bg-green-50 font-semibold text-green-700"/>`
+          : `<input type="number" value="${e.amount}" onchange="state.expenses[${i}].amount=parseFloat(this.value)||0;recalcAll()" min="0" step="0.01" class="text-right"/>`
+        }
+        ${!e.isDriverPay ? `<button class="btn btn-danger text-xs py-1 px-1.5 flex-shrink-0" onclick="state.expenses.splice(${i},1);renderExpenses();recalcAll()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>` : '<div style="width:34px"></div>'}
+      </div>
+    </div>`).join('');
+}
+
+function renderExpenseChart() {
+  const items = [];
+  const dp = getDriverPay();
+  state.expenses.forEach(e => {
+    const val = e.isDriverPay ? dp : (parseFloat(e.amount) || 0);
+    if (val > 0) items.push({ name: e.name, amount: val });
+  });
+  state.fuel.forEach(f => {
+    const val = parseFloat(f.amount) || 0;
+    if (val > 0) items.push({ name: f.name + ' (Fuel)', amount: val });
+  });
+  const max = Math.max(...items.map(i => i.amount), 1);
+  const colors = ['#3b82f6','#ef4444','#f59e0b','#10b981','#8b5cf6','#ec4899','#06b6d4','#f97316','#6366f1','#14b8a6','#e11d48','#84cc16'];
+  const el = document.getElementById('expenseChart');
+  if (!items.length) { el.innerHTML = '<p class="text-gray-400 italic text-center py-6">No expenses recorded</p>'; return; }
+  el.innerHTML = items.map((item, i) => `
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-xs text-gray-500 w-24 truncate text-right flex-shrink-0">${esc(item.name)}</span>
+      <div class="flex-1 bg-gray-100 rounded-full h-5 overflow-hidden">
+        <div class="h-full rounded-full transition-all duration-500" style="width:${(item.amount/max*100).toFixed(1)}%;background:${colors[i%colors.length]}"></div>
+      </div>
+      <span class="text-xs font-semibold text-gray-700 w-20 text-right">${fmt(item.amount)}</span>
+    </div>`).join('');
+}
+
+// ========== ADD ITEMS ==========
+function addLoad() { state.loads.push({ name: '', amount: 0 }); renderLoads(); recalcAll(); }
+function addFuel() { state.fuel.push({ name: 'Fuel', amount: 0 }); renderFuel(); recalcAll(); }
+function addExpense() { state.expenses.push({ name: '', amount: 0 }); renderExpenses(); recalcAll(); }
+
+// ========== HISTORY ==========
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  const empty = document.getElementById('historyEmpty');
+  if (!state.history.length) { el.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  el.innerHTML = state.history.map((h, i) => `
+    <div class="flex items-center justify-between py-3 border-b border-gray-100 fade-in">
+      <div>
+        <div class="font-semibold text-gray-900">${esc(h.period)}</div>
+        <div class="text-sm text-gray-500">${esc(h.payee)} &bull; Saved ${esc(h.savedAt)}</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="text-right">
+          <div class="text-xs text-gray-500">Gross</div>
+          <div class="font-bold text-amber-600">${fmt(h.gross)}</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-gray-500">Net</div>
+          <div class="font-bold" style="color:${h.net>=0?'#16a34a':'#dc2626'}">${fmt(h.net)}</div>
+        </div>
+        <button class="btn btn-danger text-xs py-1 px-2" onclick="state.history.splice(${i},1);saveData();renderHistory()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function saveToHistory() {
+  state.history.unshift({
+    period: state.settings.paymentDate,
+    payee: state.settings.payeeName,
+    gross: getGrossPay(),
+    deductions: getTotalDeductions(),
+    net: getNetPay(),
+    savedAt: new Date().toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }),
+    snapshot: JSON.parse(JSON.stringify({ loads: state.loads, fuel: state.fuel, expenses: state.expenses, settings: state.settings }))
+  });
+  saveData();
+  renderHistory();
+  showToast('Pay period saved to history', 'success');
+}
+
+// ========== EMAIL ==========
+function generateEmailBody() {
+  const s = state.settings;
+  const body = `PAY STUB SUMMARY - ${s.companyName}
+${'='.repeat(45)}
+
+Payee: ${s.payeeName}
+Period: ${s.paymentDate}
+Payment Method: ${s.paymentMethod}
+Pay Rate: ${s.payRate}%
+Tax Status: ${s.taxStatus}
+
+LOADS & REVENUE
+${'-'.repeat(30)}
+${state.loads.map(l => `  ${l.name}: ${fmt(l.amount)}`).join('\n')}
+  TOTAL LOADS: ${fmt(getGrossPay())}
+
+FUEL DEDUCTIONS
+${'-'.repeat(30)}
+${state.fuel.length ? state.fuel.map(f => `  ${f.name}: ${fmt(f.amount)}`).join('\n') : '  (none)'}
+  TOTAL FUEL: ${fmt(getFuelTotal())}
+
+EXPENSE DEDUCTIONS
+${'-'.repeat(30)}
+${state.expenses.map(e => `  ${e.name}: ${fmt(e.isDriverPay ? getDriverPay() : e.amount)}`).join('\n')}
+  TOTAL EXPENSES: ${fmt(getExpensesTotal())}
+
+${'='.repeat(45)}
+  TOTAL GROSS PAY:    ${fmt(getGrossPay())}
+  TOTAL DEDUCTIONS:   ${fmt(getTotalDeductions())}
+  TOTAL NET PAY:      ${fmt(getNetPay())}
+${'='.repeat(45)}
+
+TIME-OFF BALANCES
+  Vacation: ${state.timeOff.vacation} | Personal: ${state.timeOff.personal}
+  Sick: ${state.timeOff.sick} | Medical: ${state.timeOff.medical}
+
+${state.messages ? 'NOTES:\n' + state.messages + '\n' : ''}
+Generated on ${new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })}`;
+
+  document.getElementById('emailSubject').value = `Pay Stub - ${s.payeeName} - ${s.paymentDate}`;
+  document.getElementById('emailBody').value = body;
+  document.getElementById('emailPreview').textContent = body;
+  document.getElementById('emailTo').value = s.defaultEmail || '';
+  document.getElementById('emailCc').value = s.ccEmail || '';
+}
+
+function sendEmail() {
+  const to = document.getElementById('emailTo').value;
+  const cc = document.getElementById('emailCc').value;
+  const subject = encodeURIComponent(document.getElementById('emailSubject').value);
+  const body = encodeURIComponent(document.getElementById('emailBody').value);
+  if (!to) { showToast('Please enter a recipient email', 'error'); return; }
+
+  const provider = state.settings.emailProvider;
+  let url;
+  if (provider === 'gmail') {
+    url = `https://mail.google.com/mail/?view=cm&to=${to}&cc=${cc}&su=${subject}&body=${body}`;
+  } else if (provider === 'outlook') {
+    url = `https://outlook.live.com/mail/0/deeplink/compose?to=${to}&cc=${cc}&subject=${subject}&body=${body}`;
+  } else {
+    url = `mailto:${to}?cc=${cc}&subject=${subject}&body=${body}`;
+  }
+  window.open(url, '_blank');
+  showToast('Email client opened', 'info');
+}
+
+// ========== EXPORT PDF ==========
+function exportPDF() {
+  switchPage('paystub');
+  setTimeout(() => { window.print(); }, 300);
+}
+
+// ========== NAVIGATION ==========
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  const target = document.getElementById('page-' + page);
+  if (target) { target.classList.remove('hidden'); target.classList.add('fade-in'); }
+
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  const link = document.querySelector(`.sidebar-link[data-page="${page}"]`);
+  if (link) link.classList.add('active');
+
+  // Page-specific init
+  if (page === 'email') generateEmailBody();
+  if (page === 'history') renderHistory();
+
+  // Close mobile sidebar
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar.classList.contains('open')) toggleSidebar();
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('hidden');
+}
+
+// ========== TOAST ==========
+function showToast(msg, type = 'info') {
+  const toast = document.getElementById('toast');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = msg;
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ========== UTILS ==========
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ========== INIT ==========
+function init() {
+  // Set today's date in header
+  document.getElementById('headerDate').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  // Render all lists
+  renderLoads();
+  renderFuel();
+  renderExpenses();
+  renderHistory();
+  recalcAll();
+
+  // Register service worker for PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+
+  // PWA install prompt
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('pwaInstallBar').classList.remove('hidden');
+  });
+  window.installPWA = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => {
+        deferredPrompt = null;
+        document.getElementById('pwaInstallBar').classList.add('hidden');
+      });
+    }
+  };
+  window.dismissInstall = () => {
+    document.getElementById('pwaInstallBar').classList.add('hidden');
+  };
+}
+
+init();
+</script>
+</body>
+</html>

@@ -44,15 +44,31 @@
         </div>
       </div>
       <!-- Floating info card -->
-      <div class="mx-1 -mt-1 rounded-2xl p-3.5 info-card" style="background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.1);">
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.72rem] font-bold bg-blue-50 text-blue-700">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
-            {{ state.settings.paymentDate }}
-          </span>
-          <span class="px-3 py-1.5 rounded-full text-[0.72rem] font-bold bg-emerald-50 text-emerald-700">{{ state.settings.taxStatus }}</span>
-          <span class="px-3 py-1.5 rounded-full text-[0.72rem] font-bold bg-amber-50 text-amber-700">{{ state.settings.payRate }}%</span>
-          <span class="px-3 py-1.5 rounded-full text-[0.72rem] font-bold bg-gray-100 text-gray-600">{{ state.settings.paymentMethod }}</span>
+      <div class="mx-1 -mt-1 rounded-2xl info-card overflow-hidden" style="background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.1);">
+        <div class="grid grid-cols-4 divide-x divide-gray-100">
+          <div class="flex flex-col items-center py-3 px-1.5 gap-1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+            <span class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-wider">Period</span>
+            <div class="flex flex-col items-center gap-0.5">
+              <span class="text-[0.65rem] font-extrabold text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 leading-none">{{ state.settings.paymentDate.split('-')[0] }}</span>
+              <span class="text-[0.65rem] font-extrabold text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 leading-none">{{ state.settings.paymentDate.split('-')[1] }}</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center py-3 px-1.5 gap-1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-wider">Tax</span>
+            <span class="text-[0.85rem] font-extrabold text-emerald-600">{{ state.settings.taxStatus }}</span>
+          </div>
+          <div class="flex flex-col items-center py-3 px-1.5 gap-1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-wider">Rate</span>
+            <span class="text-[0.85rem] font-extrabold text-amber-600">{{ state.settings.payRate }}%</span>
+          </div>
+          <div class="flex flex-col items-center py-3 px-1.5 gap-1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <span class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-wider">Pay</span>
+            <span class="text-[0.72rem] font-extrabold text-indigo-600">{{ state.settings.paymentMethod }}</span>
+          </div>
         </div>
       </div>
     </header>

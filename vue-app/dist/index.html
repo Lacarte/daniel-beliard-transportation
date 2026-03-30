@@ -18,10 +18,16 @@
       theme: { extend: { fontFamily: { sans: ['Rajdhani','system-ui','sans-serif'] } } }
     }
   </script>
-  <script type="module" crossorigin src="/assets/index-Z6jAm9wQ.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BgnCIN8p.css">
+  <script type="module" crossorigin src="/assets/index-uUZWCOvZ.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CTTwNuld.css">
 </head>
 <body>
   <div id="app"></div>
+  <script>
+    // Unregister stale service workers from previous projects
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+    }
+  </script>
 </body>
 </html>

@@ -21,7 +21,7 @@
       <!-- Welcome text on blue bg -->
       <div class="px-1 pt-1 pb-5">
         <div class="flex items-center justify-between mb-2">
-          <div class="text-white/50 text-[0.7rem] font-semibold tracking-wide">Welcome back</div>
+          <div class="text-white/60 text-sm font-bold tracking-wide">Welcome back</div>
           <div class="flex gap-2">
             <button @click="toggle()" class="w-9 h-9 rounded-xl flex items-center justify-center active:scale-95 transition-transform" style="background:rgba(255,255,255,.15); backdrop-filter:blur(4px);">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

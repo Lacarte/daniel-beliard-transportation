@@ -1,15 +1,13 @@
 {
   "name": "daniel-beliard-transportation",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Sunshine Trans INC - Payroll Dashboard",
   "scripts": {
     "build": "cd vue-app && npm install && npm run build",
     "start": "node server.js"
   },
   "dependencies": {
-    "connect-livereload": "^0.6.1",
-    "express": "^4.21.0",
-    "livereload": "^0.10.3"
+    "express": "^4.21.0"
   },
   "engines": {
     "node": ">=18"

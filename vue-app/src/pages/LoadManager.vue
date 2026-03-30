@@ -162,7 +162,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="card"><div class="card-header">Load Information</div><div class="card-body space-y-3">
           <div class="field-group"><div class="label">Load Name / Route</div><input type="text" v-model="form.name" placeholder="e.g. Well Logistics INC (NY-FL)"/></div>
-          <div class="field-group"><div class="label">Load Amount ($)</div><input type="number" v-model.number="form.amount" min="0" step="0.01"/></div>
+          <div class="field-group"><div class="label">Load Amount ($)</div><input type="number" v-model.number="form.amount" min="0" step="0.01" placeholder="0.00"/></div>
           <div class="grid grid-cols-2 gap-3">
             <div class="field-group"><div class="label">Load Date</div><input type="date" v-model="form.loadDate"/></div>
             <div class="field-group"><div class="label">Delivery Date</div><input type="date" v-model="form.deliveryDate"/></div>
@@ -184,7 +184,7 @@
         <div class="card"><div class="card-header" style="background:#dc2626; color:#fff; border-radius:0.75rem 0.75rem 0 0;">Fuel Entries</div><div class="card-body">
           <div v-for="(f, i) in form.fuel" :key="i" class="expense-row">
             <input type="text" v-model="f.name" placeholder="Fuel stop"/>
-            <div class="flex gap-1"><input type="number" v-model.number="f.amount" min="0" step="0.01" class="text-right"/><button class="btn btn-danger text-xs py-1 px-1.5" @click="form.fuel.splice(i, 1)">&times;</button></div>
+            <div class="flex gap-1"><input type="number" v-model.number="f.amount" min="0" step="0.01" placeholder="0.00" class="text-right"/><button class="btn btn-danger text-xs py-1 px-1.5" @click="form.fuel.splice(i, 1)">&times;</button></div>
           </div>
           <button class="btn btn-outline mt-2 w-full justify-center text-sm" @click="form.fuel.push({name:'Fuel',amount:0})">+ Add Fuel</button>
           <div class="flex justify-between mt-3 pt-3 border-t font-bold text-sm"><span>Total Fuel</span><span class="text-red-600">{{ fmt(formCalc.fuelTotal) }}</span></div>
@@ -195,7 +195,7 @@
             <input type="text" v-model="e.name" :disabled="e.isDriverPay" :style="e.isDriverPay ? 'background:#f0fdf4' : ''"/>
             <div class="flex gap-1">
               <input v-if="e.isDriverPay" type="text" :value="fmt(formCalc.driverPay)" disabled class="text-right bg-green-50 font-semibold text-green-700"/>
-              <input v-else type="number" v-model.number="e.amount" min="0" step="0.01" class="text-right"/>
+              <input v-else type="number" v-model.number="e.amount" min="0" step="0.01" placeholder="0.00" class="text-right"/>
               <button v-if="!e.isDriverPay" class="btn btn-danger text-xs py-1 px-1.5" @click="form.expenses.splice(i,1)">&times;</button>
               <div v-else style="width:30px"></div>
             </div>

@@ -1,17 +1,17 @@
 import { reactive, computed, watch } from 'vue'
 
 const DEFAULT_EXPENSE_TEMPLATE = [
-  { name: 'Driver', amount: 0, isDriverPay: true },
-  { name: 'Insurance', amount: 1500 },
-  { name: 'ELD Log', amount: 150 },
-  { name: 'Oil Change', amount: 900 },
-  { name: 'Trailer', amount: 695 },
-  { name: 'Shower', amount: 0 },
-  { name: 'Scale', amount: 0 },
-  { name: 'Food', amount: 0 },
-  { name: 'Toll', amount: 0 },
-  { name: 'Tire', amount: 0 },
-  { name: 'Maintenance', amount: 0 },
+  { name: 'Driver', amount: 0.00, isDriverPay: true },
+  { name: 'Insurance', amount: 1500.00 },
+  { name: 'ELD Log', amount: 150.00 },
+  { name: 'Oil Change', amount: 900.00 },
+  { name: 'Trailer', amount: 695.00 },
+  { name: 'Shower', amount: 0.00 },
+  { name: 'Scale', amount: 0.00 },
+  { name: 'Food', amount: 0.00 },
+  { name: 'Toll', amount: 0.00 },
+  { name: 'Tire', amount: 0.00 },
+  { name: 'Maintenance', amount: 0.00 },
 ]
 
 function generateId() {

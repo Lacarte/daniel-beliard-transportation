@@ -22,7 +22,7 @@
       <div class="card"><div class="card-header">Tax & Additional</div><div class="card-body space-y-3">
         <div class="field-group"><div class="label">Allowances</div><input type="number" v-model.number="state.settings.allowances" min="0"/></div>
         <div class="field-group"><div class="label">Additional %</div><input type="number" v-model.number="state.settings.additionalPct" min="0" max="100" step="0.01"/></div>
-        <div class="field-group"><div class="label">Additional Amount ($)</div><input type="number" v-model.number="state.settings.additionalAmt" min="0" step="0.01"/></div>
+        <div class="field-group"><div class="label">Additional Amount ($)</div><input type="number" v-model.number="state.settings.additionalAmt" min="0" step="0.01" placeholder="0.00"/></div>
       </div></div>
     </div>
     <div class="flex gap-3 mt-4">

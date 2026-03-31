@@ -310,7 +310,7 @@
 
       <div class="flex items-center gap-3 pb-6">
         <button class="btn btn-gold flex-grow justify-center py-4 text-lg font-semibold tracking-wide" @click="saveForm()">{{ editIndex < 0 ? 'Save Load' : 'Update Load' }}</button>
-        <button class="btn btn-outline justify-center px-5 py-2 text-sm" @click="editing = false">Cancel</button>
+        <button class="btn btn-outline justify-center px-5 py-4 text-lg font-semibold" @click="editing = false">Cancel</button>
       </div>
     </template>
   </div>

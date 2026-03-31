@@ -12,7 +12,7 @@
   <main class="min-h-screen lg:ml-64 p-3 sm:p-4 pt-14 lg:pt-4 relative">
     <!-- Top background truck image -->
     <!-- Background accent -->
-    <div class="absolute top-0 left-0 right-0 h-64 sm:h-72 pointer-events-none z-0 overflow-hidden" style="background:linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%); border-radius:0 0 2rem 2rem;">
+    <div class="absolute top-0 left-0 right-0 h-52 sm:h-72 pointer-events-none z-0 overflow-hidden" style="background:linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%); border-radius:0 0 2rem 2rem;">
       <img src="/images/truck-bg.jpg" alt="" class="absolute right-0 top-0 w-3/4 h-full object-cover object-right opacity-[0.12]" style="mask-image:linear-gradient(to left, black 20%, transparent 80%); filter:grayscale(1) brightness(2);" />
       <div class="absolute inset-0" style="background:radial-gradient(circle at 20% 80%, rgba(59,130,246,.4), transparent 60%);"></div>
     </div>
@@ -44,7 +44,7 @@
         </div>
       </div>
       <!-- Floating info card -->
-      <div class="mx-1 mt-5 rounded-2xl info-card overflow-hidden" style="background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.1);">
+      <div class="mx-1 -mt-1 rounded-2xl info-card overflow-hidden" style="background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.1);">
         <div class="grid grid-cols-4 divide-x divide-gray-100">
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>

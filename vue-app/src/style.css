@@ -302,3 +302,23 @@ body.dark .md\:hidden.rounded-2xl { background:#1e293b !important; }
 /* Action bar in load cards */
 body.dark .border-t.border-gray-100 { border-color:rgba(255,255,255,.06) !important; }
 body.dark .w-px.bg-gray-100 { background:rgba(255,255,255,.06) !important; }
+
+/* Delete modal */
+.delete-modal-card { background:#fff; }
+.delete-modal-icon { background:rgba(239,68,68,.1); }
+.delete-modal-title { color:#1e293b; }
+.delete-modal-text { color:#64748b; }
+.delete-modal-name { color:#334155; }
+.delete-modal-btn-no { background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; }
+body.dark .delete-modal-card { background:#1e293b; }
+body.dark .delete-modal-icon { background:rgba(239,68,68,.15); }
+body.dark .delete-modal-title { color:#f1f5f9; }
+body.dark .delete-modal-text { color:#94a3b8; }
+body.dark .delete-modal-name { color:#e2e8f0; }
+body.dark .delete-modal-btn-no { background:#334155; color:#e2e8f0; border:1px solid #475569; }
+
+/* Modal transitions */
+.modal-enter-active, .modal-leave-active { transition: all 0.25s ease; }
+.modal-enter-from, .modal-leave-to { opacity: 0; }
+.modal-enter-from > div:last-child, .modal-leave-to > div:last-child { transform: scale(0.9) translateY(10px); }
+.modal-enter-active > div:last-child, .modal-leave-active > div:last-child { transition: transform 0.25s ease; }

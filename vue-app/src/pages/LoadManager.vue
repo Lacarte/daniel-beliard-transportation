@@ -313,6 +313,34 @@
         <button class="btn btn-outline justify-center px-5 py-4 text-lg font-semibold" @click="editing = false">Cancel</button>
       </div>
     </template>
+    <!-- Delete Confirmation Modal -->
+    <div v-if="deleteModal.open" class="fixed inset-0 z-50 flex items-center justify-center p-4" @click.self="deleteModal.open = false">
+      <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="deleteModal.open = false"></div>
+      <div class="relative z-10 w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl delete-modal-card">
+        <!-- Icon -->
+        <div class="flex justify-center pt-6 pb-2">
+          <div class="w-16 h-16 rounded-full flex items-center justify-center delete-modal-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              <line x1="10" y1="11" x2="10" y2="17"/>
+              <line x1="14" y1="11" x2="14" y2="17"/>
+            </svg>
+          </div>
+        </div>
+        <!-- Text -->
+        <div class="text-center px-6 pb-4">
+          <h3 class="text-lg font-bold delete-modal-title">Delete Load</h3>
+          <p class="text-sm delete-modal-text">Are you sure you want to delete <span class="font-semibold delete-modal-name">"{{ deleteModal.name }}"</span>? This action cannot be undone.</p>
+        </div>
+        <!-- Buttons -->
+        <div class="flex gap-3 px-6 pb-6">
+          <button class="flex-1 py-3 rounded-xl text-sm font-bold active:scale-95 transition-all delete-modal-btn-no" @click="deleteModal.open = false">No</button>
+          <button class="flex-1 py-3 rounded-xl text-sm font-bold text-white active:scale-95 transition-all" style="background:linear-gradient(135deg, #ef4444, #dc2626);" @click="confirmDelete()">Yes</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -485,9 +513,14 @@ function saveForm() {
   editing.value = false
 }
 
+const deleteModal = ref({ open: false, index: -1, name: '' })
 function doDelete(i) {
-  if (!confirm('Delete this load?')) return
-  deleteLoad(i)
+  const load = state.managedLoads[i]
+  deleteModal.value = { open: true, index: i, name: load?.name || 'this load' }
+}
+function confirmDelete() {
+  deleteLoad(deleteModal.value.index)
+  deleteModal.value.open = false
   showToast('Load deleted', 'info')
 }
 

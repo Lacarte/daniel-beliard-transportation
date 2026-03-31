@@ -29,6 +29,7 @@ function getDefaultState() {
       paymentDate: '06/01/24-06/30/24',
       paymentMethod: 'Monthly',
       payRate: 20,
+      factoringRate: 2.5,
       taxStatus: '1099',
       allowances: 0,
       additionalPct: 0,
@@ -106,13 +107,17 @@ watch(state, () => {
 function calcLoad(l) {
   const amount = parseFloat(l.amount) || 0
   const rate = parseFloat(l.payRate) || 0
-  const dp = amount * (rate / 100)
+  const factoringRate = parseFloat(l.factoringRate) || 0
+  const factoring = amount * (factoringRate / 100)
+  const dpGross = amount * (rate / 100)
+  const driverPay = dpGross - factoring
   const ft = (l.fuel || []).reduce((s, f) => s + (parseFloat(f.amount) || 0), 0)
   const et = (l.expenses || []).reduce((s, e) => {
-    if (e.isDriverPay) return s + dp
+    if (e.isDriverPay) return s + driverPay
     return s + (parseFloat(e.amount) || 0)
   }, 0)
-  return { gross: amount, driverPay: dp, fuelTotal: ft, expensesTotal: et, totalDeductions: ft + et, netPay: amount - (ft + et) }
+  const totalDeductions = ft + et
+  return { gross: amount, driverPayGross: dpGross, driverPay, factoring, factoringRate, fuelTotal: ft, expensesTotal: et, totalDeductions, netPay: amount - totalDeductions }
 }
 
 // ========== FILTERED LOADS ==========
@@ -124,7 +129,7 @@ function getFilteredLoads(filters = {}) {
     if (filters.dateEnd && l.loadDate > filters.dateEnd) return false
     if (filters.search) {
       const q = filters.search.toLowerCase()
-      if (!(l.name || '').toLowerCase().includes(q) && !(l.driverName || '').toLowerCase().includes(q) && !(l.id || '').toLowerCase().includes(q)) return false
+      if (!(l.name || '').toLowerCase().includes(q) && !(l.driverName || '').toLowerCase().includes(q) && !(l.id || '').toLowerCase().includes(q) && !(l.loadNumber || '').toLowerCase().includes(q)) return false
     }
     return true
   })
@@ -164,6 +169,7 @@ function createLoad(data = {}) {
   const s = state.settings
   const load = {
     id: generateId(),
+    loadNumber: data.loadNumber || '',
     name: data.name || '',
     amount: data.amount || 0,
     loadDate: data.loadDate || new Date().toISOString().slice(0, 10),
@@ -171,6 +177,7 @@ function createLoad(data = {}) {
     status: 'pending',
     driverName: data.driverName || s.payeeName || '',
     payRate: data.payRate ?? s.payRate ?? 20,
+    factoringRate: data.factoringRate ?? s.factoringRate ?? 2.5,
     payMethod: data.payMethod || s.paymentMethod || 'Monthly',
     taxStatus: data.taxStatus || s.taxStatus || '1099',
     fuel: data.fuel || [],

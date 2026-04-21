@@ -37,22 +37,22 @@
       </div>
 
       <!-- Period Summary -->
-      <div class="grid grid-cols-4 gap-1.5 sm:gap-3 mb-4 stagger-in">
-        <div class="card p-2 sm:p-3 text-center overflow-hidden">
-          <div class="text-[0.5rem] sm:text-xs font-bold text-gray-400 uppercase tracking-wider">Loads</div>
-          <div class="text-lg sm:text-2xl font-extrabold text-gray-900 font-display mt-0.5">{{ agg.count }}</div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 stagger-in">
+        <div class="card p-3 text-center overflow-hidden">
+          <div class="text-[0.55rem] sm:text-xs font-bold text-gray-400 uppercase tracking-wider">Loads</div>
+          <div class="text-2xl font-extrabold text-gray-900 font-display mt-0.5">{{ agg.count }}</div>
         </div>
-        <div class="card p-2 sm:p-3 text-center overflow-hidden">
-          <div class="text-[0.5rem] sm:text-xs font-bold text-emerald-500 uppercase tracking-wider">Gross</div>
-          <div class="text-[0.7rem] sm:text-xl font-extrabold text-emerald-700 font-mono mt-0.5 truncate">{{ fmt(agg.totalGross) }}</div>
+        <div class="card p-3 text-center overflow-hidden">
+          <div class="text-[0.55rem] sm:text-xs font-bold text-emerald-500 uppercase tracking-wider">Gross</div>
+          <div class="text-base sm:text-xl font-extrabold text-emerald-700 font-mono mt-0.5">{{ fmt(agg.totalGross) }}</div>
         </div>
-        <div class="card p-2 sm:p-3 text-center overflow-hidden">
-          <div class="text-[0.5rem] sm:text-xs font-bold text-red-400 uppercase tracking-wider">Deduct.</div>
-          <div class="text-[0.7rem] sm:text-xl font-extrabold text-red-600 font-mono mt-0.5 truncate">{{ fmt(agg.totalDeductions) }}</div>
+        <div class="card p-3 text-center overflow-hidden">
+          <div class="text-[0.55rem] sm:text-xs font-bold text-red-400 uppercase tracking-wider">Deductions</div>
+          <div class="text-base sm:text-xl font-extrabold text-red-600 font-mono mt-0.5">{{ fmt(agg.totalDeductions) }}</div>
         </div>
-        <div class="rounded-xl p-2 sm:p-3 text-center overflow-hidden" :style="{background: agg.netPay >= 0 ? 'linear-gradient(135deg,#1e3a8a,#2563eb)' : 'linear-gradient(135deg,#dc2626,#ef4444)'}">
-          <div class="text-[0.5rem] sm:text-xs font-bold text-white/50 uppercase tracking-wider">Net</div>
-          <div class="text-[0.7rem] sm:text-xl font-extrabold text-white font-mono mt-0.5 truncate">{{ fmt(agg.netPay) }}</div>
+        <div class="rounded-xl p-3 text-center overflow-hidden" :style="{background: agg.netPay >= 0 ? 'linear-gradient(135deg,#1e3a8a,#2563eb)' : 'linear-gradient(135deg,#dc2626,#ef4444)'}">
+          <div class="text-[0.55rem] sm:text-xs font-bold text-white/50 uppercase tracking-wider">Net Pay</div>
+          <div class="text-base sm:text-xl font-extrabold text-white font-mono mt-0.5">{{ fmt(agg.netPay) }}</div>
         </div>
       </div>
 
@@ -116,40 +116,37 @@
                   <span :class="['px-2.5 py-1 rounded-full text-[0.6rem] font-bold whitespace-nowrap flex-shrink-0', statusClass(l.status)]">{{ l.status }}</span>
                 </div>
               </div>
-              <!-- Stats -->
-              <div class="grid grid-cols-3 mx-4 mb-3 rounded-xl overflow-hidden" style="box-shadow:inset 0 0 0 1px rgba(0,0,0,.04);">
-                <div class="py-2.5 text-center bg-emerald-50/60">
-                  <div class="text-[0.55rem] font-bold uppercase text-gray-400 tracking-wider">Gross</div>
-                  <div class="font-extrabold text-[0.9rem] text-emerald-700 font-mono">{{ fmt(calcLoad(l).gross) }}</div>
+              <!-- Financial summary -->
+              <div class="flex items-center justify-between mx-4 mb-3 px-3 py-2 rounded-lg" style="background:rgba(0,0,0,.02);">
+                <div class="text-center">
+                  <div class="text-[0.5rem] font-bold uppercase text-gray-400 tracking-wider">Gross</div>
+                  <div class="font-extrabold text-[0.8rem] text-emerald-700 font-mono">{{ fmt(calcLoad(l).gross) }}</div>
                 </div>
-                <div class="py-2.5 text-center bg-red-50/60">
-                  <div class="text-[0.55rem] font-bold uppercase text-gray-400 tracking-wider">Deduct.</div>
-                  <div class="font-extrabold text-[0.9rem] text-red-600 font-mono">{{ fmt(calcLoad(l).totalDeductions) }}</div>
+                <div class="text-center">
+                  <div class="text-[0.5rem] font-bold uppercase text-gray-400 tracking-wider">Deduct.</div>
+                  <div class="font-extrabold text-[0.8rem] text-red-600 font-mono">{{ fmt(calcLoad(l).totalDeductions) }}</div>
                 </div>
-                <div class="py-2.5 text-center" :class="calcLoad(l).netPay >= 0 ? 'bg-emerald-500/10' : 'bg-red-50/60 dark:bg-red-500/10'">
-                  <div class="text-[0.55rem] font-bold uppercase text-gray-400 tracking-wider">Net</div>
-                  <div class="font-extrabold text-[0.9rem] font-mono" :style="{color: calcLoad(l).netPay >= 0 ? '#22c55e' : '#dc2626'}">{{ fmt(calcLoad(l).netPay) }}</div>
+                <div class="text-center">
+                  <div class="text-[0.5rem] font-bold uppercase text-gray-400 tracking-wider">Net</div>
+                  <div class="font-extrabold text-[0.8rem] font-mono" :style="{color: calcLoad(l).netPay >= 0 ? '#22c55e' : '#dc2626'}">{{ fmt(calcLoad(l).netPay) }}</div>
                 </div>
               </div>
               <!-- Action bar -->
-              <div class="flex border-t border-gray-100">
-                <button class="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-[0.7rem] font-bold text-blue-600 active:bg-blue-50 transition-colors" @click="exportInvoice(l)">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <div class="grid grid-cols-4 border-t border-gray-100">
+                <button class="py-3 flex flex-col items-center justify-center gap-1 text-[0.65rem] font-semibold text-blue-600 active:bg-blue-50/50 transition-colors" @click="exportInvoice(l)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                   Invoice
                 </button>
-                <div class="w-px bg-gray-100"></div>
-                <button class="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-[0.7rem] font-bold text-green-600 active:bg-green-50 transition-colors" @click="sharePdf(l)" :disabled="sharingLoad === l.id">
-                  <svg v-if="sharingLoad !== l.id" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                  {{ sharingLoad === l.id ? 'Generating...' : 'Share' }}
+                <button class="py-3 flex flex-col items-center justify-center gap-1 text-[0.65rem] font-semibold text-green-600 active:bg-green-50/50 transition-colors border-l border-gray-100" @click="sharePdf(l)" :disabled="sharingLoad === l.id">
+                  <svg v-if="sharingLoad !== l.id" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  {{ sharingLoad === l.id ? '...' : 'Share' }}
                 </button>
-                <div class="w-px bg-gray-100"></div>
-                <button class="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-[0.7rem] font-bold text-gray-600 active:bg-gray-50 transition-colors" @click="startEdit(findIndex(l))">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                <button class="py-3 flex flex-col items-center justify-center gap-1 text-[0.65rem] font-semibold text-gray-500 active:bg-gray-50/50 transition-colors border-l border-gray-100" @click="startEdit(findIndex(l))">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   Edit
                 </button>
-                <div class="w-px bg-gray-100"></div>
-                <button class="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-[0.7rem] font-bold text-red-500 active:bg-red-50 transition-colors" @click="doDelete(findIndex(l))">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                <button class="py-3 flex flex-col items-center justify-center gap-1 text-[0.65rem] font-semibold text-red-500 active:bg-red-50/50 transition-colors border-l border-gray-100" @click="doDelete(findIndex(l))">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
                   Delete
                 </button>
               </div>

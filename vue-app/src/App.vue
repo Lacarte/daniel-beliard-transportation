@@ -60,7 +60,7 @@
       <div class="mx-1 rounded-2xl info-card overflow-hidden" style="background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.03);">
         <div class="grid grid-cols-4 divide-x divide-white/[.06]">
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
-            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(59,130,246,.12);">
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(59,130,246,.18);">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
             </div>
             <span class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider">Period</span>
@@ -77,21 +77,21 @@
             </div>
           </div>
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
-            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(16,185,129,.12);">
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(16,185,129,.18);">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             </div>
             <span class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider">Tax</span>
             <span class="text-sm font-extrabold text-emerald-600 font-display">{{ state.settings.taxStatus }}</span>
           </div>
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
-            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(251,191,36,.12);">
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(251,191,36,.18);">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
             <span class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider">Rate</span>
             <span class="text-sm font-extrabold text-amber-600 font-display">{{ state.settings.payRate }}%</span>
           </div>
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
-            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(99,102,241,.12);">
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(99,102,241,.18);">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
             </div>
             <span class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider">Pay</span>

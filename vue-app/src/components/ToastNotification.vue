@@ -1,5 +1,7 @@
 <template>
-  <div :class="['toast', `toast-${toast.type}`, { show: toast.show }]">{{ toast.msg }}</div>
+  <transition name="fade">
+    <div v-if="toast.show" :class="['toast show', `toast-${toast.type}`]">{{ toast.msg }}</div>
+  </transition>
 </template>
 
 <script setup>

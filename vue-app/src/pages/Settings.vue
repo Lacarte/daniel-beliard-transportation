@@ -1,6 +1,6 @@
 <template>
   <div class="fade-in">
-    <h2 class="text-2xl font-bold text-gray-900 font-display mb-5">Settings</h2>
+    <h2 class="text-2xl font-bold text-gray-900 font-display mb-5 sm:pl-0 pl-8">Settings</h2>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
       <!-- Employee Defaults -->

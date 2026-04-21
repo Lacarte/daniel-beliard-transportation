@@ -5,10 +5,14 @@
       <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg>
       </div>
-      <div>
+      <div class="flex-1">
         <div class="text-white font-bold text-sm tracking-wide font-display">SUNSHINE TRANS</div>
         <div class="text-white/30 text-[0.6rem] font-medium tracking-widest">INCORPORATED</div>
       </div>
+      <!-- Close button (mobile only) -->
+      <button class="lg:hidden w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white/70 hover:bg-white/[.06] transition-all active:scale-95" @click="$emit('close')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
 
     <!-- Navigation -->

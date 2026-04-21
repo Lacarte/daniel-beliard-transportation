@@ -2,7 +2,7 @@
   <ToastNotification />
 
   <!-- Mobile menu button -->
-  <button class="lg:hidden fixed top-3 left-3 z-[60] text-white p-2 rounded-xl active:scale-95 transition-transform" style="background:rgba(255,255,255,.1); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);" @click="sidebarOpen = !sidebarOpen">
+  <button v-if="!sidebarOpen" class="lg:hidden fixed top-3 left-3 z-[60] text-white p-2 rounded-xl active:scale-95 transition-transform" style="background:rgba(255,255,255,.1); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);" @click="sidebarOpen = true">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
   </button>
   <div v-if="sidebarOpen" class="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm" @click="sidebarOpen = false"></div>
@@ -21,7 +21,7 @@
 
     <!-- Mobile Header -->
     <header class="sm:hidden mb-4 relative z-10">
-      <div class="px-1 pt-2 pb-6">
+      <div class="pl-10 pr-1 pt-2 pb-6">
         <div class="flex items-center justify-between mb-3">
           <div class="text-white/40 text-[0.65rem] font-semibold tracking-[0.15em] uppercase">Welcome back</div>
           <div class="flex gap-2">
@@ -50,25 +50,33 @@
       <div class="mx-1 rounded-2xl info-card overflow-hidden" style="background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.03);">
         <div class="grid grid-cols-4 divide-x divide-gray-100">
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(59,130,246,.12);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+            </div>
             <span class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider">Period</span>
             <div class="flex flex-col items-center gap-0.5">
-              <span class="text-[0.6rem] font-bold text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 leading-none">{{ state.settings.paymentDate.split('-')[0] }}</span>
-              <span class="text-[0.6rem] font-bold text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 leading-none">{{ state.settings.paymentDate.split('-')[1] }}</span>
+              <span class="text-[0.65rem] font-bold text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 leading-none">{{ state.settings.paymentDate.split('-')[0] }}</span>
+              <span class="text-[0.65rem] font-bold text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 leading-none">{{ state.settings.paymentDate.split('-')[1] }}</span>
             </div>
           </div>
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(16,185,129,.12);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
             <span class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider">Tax</span>
             <span class="text-sm font-extrabold text-emerald-600 font-display">{{ state.settings.taxStatus }}</span>
           </div>
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(251,191,36,.12);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
             <span class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider">Rate</span>
             <span class="text-sm font-extrabold text-amber-600 font-display">{{ state.settings.payRate }}%</span>
           </div>
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(99,102,241,.12);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
             <span class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider">Pay</span>
             <span class="text-[0.7rem] font-extrabold text-indigo-600 font-display">{{ state.settings.paymentMethod }}</span>
           </div>
@@ -109,6 +117,16 @@
       </div>
     </header>
 
+    <!-- Breadcrumb -->
+    <nav class="relative z-10 mb-4 flex items-center gap-1.5 text-[0.7rem] font-medium" v-if="$route.meta.label">
+      <router-link to="/" class="text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1 no-underline">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Home
+      </router-link>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-300"><polyline points="9 18 15 12 9 6"/></svg>
+      <span class="text-gray-600 font-semibold">{{ $route.meta.label }}</span>
+    </nav>
+
     <router-view class="relative z-10" v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <component :is="Component" />
@@ -119,6 +137,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import ToastNotification from './components/ToastNotification.vue'
 import { usePayroll } from './composables/usePayroll'

@@ -1,7 +1,7 @@
 <template>
   <div class="fade-in">
     <!-- Header -->
-    <div class="flex items-center justify-between mb-5 flex-wrap gap-2">
+    <div class="flex items-center justify-between mb-5 flex-wrap gap-2 sm:pl-0 pl-8">
       <h2 class="text-2xl font-bold text-gray-900 font-display">Dashboard</h2>
       <div class="flex gap-1.5">
         <button v-for="p in periods" :key="p.key" :class="['px-4 py-1.5 rounded-lg text-xs font-semibold transition-all', period === p.key ? 'bg-blue-900 text-white shadow-md' : 'btn-outline']" @click="period = p.key">{{ p.label }}</button>

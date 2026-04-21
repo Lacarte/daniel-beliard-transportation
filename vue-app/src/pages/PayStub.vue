@@ -1,6 +1,6 @@
 <template>
   <div class="fade-in">
-    <div class="flex items-center justify-between mb-5 flex-wrap gap-2">
+    <div class="flex items-center justify-between mb-5 flex-wrap gap-2 sm:pl-0 pl-8">
       <h2 class="text-2xl font-bold text-gray-900 font-display">Pay Stub</h2>
       <div class="flex gap-2 no-print">
         <button class="btn btn-gold text-xs" @click="window.print()">

@@ -3,7 +3,7 @@
     <!-- LIST VIEW -->
     <template v-if="!editing">
       <!-- Title + Create -->
-      <div class="flex items-center justify-between mb-5">
+      <div class="flex items-center justify-between mb-5 sm:pl-0 pl-8">
         <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900 font-display">Load Manager</h2>
         <button class="btn btn-gold text-xs sm:text-sm rounded-full px-5" @click="startCreate()">+ New Load</button>
       </div>

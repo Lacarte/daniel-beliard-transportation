@@ -296,9 +296,9 @@
         </div></div>
       </div>
 
-      <!-- Summary (sticky on mobile) -->
-      <div class="sm:relative sticky bottom-0 z-20 -mx-3 sm:mx-0 mb-0 sm:mb-4">
-        <div class="card sm:rounded-xl rounded-none" style="border-color:#1e3a8a; box-shadow:0 -4px 20px rgba(0,0,0,.15);">
+      <!-- Summary -->
+      <div class="mb-4">
+        <div class="card" style="border-color:#1e3a8a;">
           <div class="card-header text-sm">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-50"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             Summary

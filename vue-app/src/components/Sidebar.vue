@@ -1,22 +1,35 @@
 <template>
-  <aside :class="['fixed top-0 left-0 h-full w-64 z-50 flex flex-col transition-transform duration-300 lg:translate-x-0', open ? 'translate-x-0' : '-translate-x-full']" style="background:#1e3a8a;">
-    <div class="py-4 px-4 flex items-center justify-center gap-2 border-b border-blue-800">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFC000" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
-      <span class="text-white font-bold text-lg tracking-wide">SUNSHINE TRANS</span>
+  <aside :class="['fixed top-0 left-0 h-full w-64 z-50 flex flex-col transition-transform duration-300 lg:translate-x-0', open ? 'translate-x-0' : '-translate-x-full']" style="background:linear-gradient(180deg, #070b1a 0%, #0d1225 100%);">
+    <!-- Logo -->
+    <div class="py-5 px-5 flex items-center gap-3 border-b border-white/[.06]">
+      <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg>
+      </div>
+      <div>
+        <div class="text-white font-bold text-sm tracking-wide font-display">SUNSHINE TRANS</div>
+        <div class="text-white/30 text-[0.6rem] font-medium tracking-widest">INCORPORATED</div>
+      </div>
     </div>
-    <nav class="flex-1 flex flex-col pt-1">
-      <router-link v-for="item in nav" :key="item.to" :to="item.to" class="sidebar-link" exact-active-class="active" @click="$emit('close')">
+
+    <!-- Navigation -->
+    <nav class="flex-1 flex flex-col pt-3 px-2 gap-0.5">
+      <div class="px-3 py-2 text-[0.6rem] font-bold text-white/20 uppercase tracking-[0.15em]">Navigation</div>
+      <router-link v-for="item in nav" :key="item.to" :to="item.to" class="sidebar-link rounded-lg" exact-active-class="active" @click="$emit('close')">
         <span v-html="item.icon"></span>{{ item.label }}
       </router-link>
     </nav>
-    <div class="px-4 py-3 border-t border-blue-800 text-blue-200 text-xs text-center">&copy; 2026 Sunshine Trans INC</div>
+
+    <!-- Footer -->
+    <div class="px-4 py-4 border-t border-white/[.04]">
+      <div class="text-white/15 text-[0.6rem] text-center font-medium tracking-wider">&copy; 2026 Sunshine Trans INC</div>
+    </div>
   </aside>
 </template>
 
 <script setup>
 defineProps({ open: Boolean })
 defineEmits(['close'])
-const icon = (d) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${d}</svg>`
+const icon = (d) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`
 const nav = [
   { to: '/', label: 'Load Manager', icon: icon('<rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>') },
   { to: '/dashboard', label: 'Dashboard', icon: icon('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>') },

@@ -3,9 +3,9 @@
     <!-- LIST VIEW -->
     <template v-if="!editing">
       <!-- Title + Create -->
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900">Load Manager</h2>
-        <button class="btn btn-primary text-xs sm:text-sm rounded-full px-5" @click="startCreate()">+ New Load</button>
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900 font-display">Load Manager</h2>
+        <button class="btn btn-gold text-xs sm:text-sm rounded-full px-5" @click="startCreate()">+ New Load</button>
       </div>
 
       <!-- Period toggles + filters in one compact bar -->
@@ -13,7 +13,7 @@
         <div class="p-2.5 sm:p-3">
           <!-- Period buttons top row -->
           <div class="flex items-center gap-1.5 mb-2">
-            <button v-for="p in periods" :key="p.key" :class="['px-4 py-1.5 rounded-full text-xs font-bold transition-all', period === p.key ? 'bg-blue-900 text-white shadow-md' : 'bg-white text-gray-500 hover:bg-gray-50 shadow-sm']" @click="period = p.key">{{ p.label }}</button>
+            <button v-for="p in periods" :key="p.key" :class="['px-4 py-1.5 rounded-lg text-xs font-semibold transition-all', period === p.key ? 'bg-blue-900 text-white shadow-md' : 'bg-white text-gray-500 hover:bg-gray-50']" @click="period = p.key">{{ p.label }}</button>
             <div class="flex-1"></div>
             <!-- Collapse filter toggle on mobile -->
             <button class="sm:hidden text-xs text-gray-500 flex items-center gap-1" @click="showFilters = !showFilters">
@@ -37,22 +37,22 @@
       </div>
 
       <!-- Period Summary -->
-      <div class="grid grid-cols-4 gap-2 sm:gap-3 mb-4">
-        <div class="rounded-2xl p-2.5 sm:p-3 text-center bg-white shadow-sm">
+      <div class="grid grid-cols-4 gap-2 sm:gap-3 mb-4 stagger-in">
+        <div class="card p-2.5 sm:p-3 text-center">
           <div class="text-[0.55rem] sm:text-xs font-bold text-gray-400 uppercase tracking-wider">Loads</div>
-          <div class="text-xl sm:text-2xl font-extrabold text-gray-900 mt-0.5">{{ agg.count }}</div>
+          <div class="text-xl sm:text-2xl font-extrabold text-gray-900 font-display mt-0.5">{{ agg.count }}</div>
         </div>
-        <div class="rounded-2xl p-2.5 sm:p-3 text-center bg-white shadow-sm">
+        <div class="card p-2.5 sm:p-3 text-center">
           <div class="text-[0.55rem] sm:text-xs font-bold text-emerald-500 uppercase tracking-wider">Gross</div>
-          <div class="text-sm sm:text-xl font-extrabold text-emerald-700 mt-0.5">{{ fmt(agg.totalGross) }}</div>
+          <div class="text-sm sm:text-xl font-extrabold text-emerald-700 font-mono mt-0.5">{{ fmt(agg.totalGross) }}</div>
         </div>
-        <div class="rounded-2xl p-2.5 sm:p-3 text-center bg-white shadow-sm">
+        <div class="card p-2.5 sm:p-3 text-center">
           <div class="text-[0.55rem] sm:text-xs font-bold text-red-400 uppercase tracking-wider">Deduct.</div>
-          <div class="text-sm sm:text-xl font-extrabold text-red-600 mt-0.5">{{ fmt(agg.totalDeductions) }}</div>
+          <div class="text-sm sm:text-xl font-extrabold text-red-600 font-mono mt-0.5">{{ fmt(agg.totalDeductions) }}</div>
         </div>
-        <div class="rounded-2xl p-2.5 sm:p-3 text-center shadow-sm" :class="agg.netPay >= 0 ? 'bg-blue-900' : 'bg-red-600'">
-          <div class="text-[0.55rem] sm:text-xs font-bold text-white/60 uppercase tracking-wider">Net</div>
-          <div class="text-sm sm:text-xl font-extrabold text-white mt-0.5">{{ fmt(agg.netPay) }}</div>
+        <div class="rounded-xl p-2.5 sm:p-3 text-center" :style="{background: agg.netPay >= 0 ? 'linear-gradient(135deg,#1e3a8a,#2563eb)' : 'linear-gradient(135deg,#dc2626,#ef4444)'}">
+          <div class="text-[0.55rem] sm:text-xs font-bold text-white/50 uppercase tracking-wider">Net</div>
+          <div class="text-sm sm:text-xl font-extrabold text-white font-mono mt-0.5">{{ fmt(agg.netPay) }}</div>
         </div>
       </div>
 
@@ -80,9 +80,9 @@
               </div>
               <div class="text-sm text-gray-700">{{ l.driverName || '-' }}</div>
               <div><span :class="['badge text-xs', statusClass(l.status)]">{{ l.status }}</span></div>
-              <div class="text-right font-semibold text-sm">{{ fmt(calcLoad(l).gross) }}</div>
-              <div class="text-right font-semibold text-sm text-red-600">{{ fmt(calcLoad(l).totalDeductions) }}</div>
-              <div class="text-right font-semibold text-sm" :style="{color: calcLoad(l).netPay >= 0 ? '#16a34a' : '#dc2626'}">{{ fmt(calcLoad(l).netPay) }}</div>
+              <div class="text-right font-semibold text-sm font-mono">{{ fmt(calcLoad(l).gross) }}</div>
+              <div class="text-right font-semibold text-sm text-red-600 font-mono">{{ fmt(calcLoad(l).totalDeductions) }}</div>
+              <div class="text-right font-semibold text-sm font-mono" :style="{color: calcLoad(l).netPay >= 0 ? '#16a34a' : '#dc2626'}">{{ fmt(calcLoad(l).netPay) }}</div>
               <div class="flex gap-1.5 justify-center">
                 <button class="btn btn-outline text-xs py-1 px-2" @click="exportInvoice(l)" title="Invoice">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -120,15 +120,15 @@
               <div class="grid grid-cols-3 mx-4 mb-3 rounded-xl overflow-hidden" style="box-shadow:inset 0 0 0 1px rgba(0,0,0,.04);">
                 <div class="py-2.5 text-center bg-emerald-50/60">
                   <div class="text-[0.55rem] font-bold uppercase text-gray-400 tracking-wider">Gross</div>
-                  <div class="font-extrabold text-[0.9rem] text-emerald-700">{{ fmt(calcLoad(l).gross) }}</div>
+                  <div class="font-extrabold text-[0.9rem] text-emerald-700 font-mono">{{ fmt(calcLoad(l).gross) }}</div>
                 </div>
                 <div class="py-2.5 text-center bg-red-50/60">
                   <div class="text-[0.55rem] font-bold uppercase text-gray-400 tracking-wider">Deduct.</div>
-                  <div class="font-extrabold text-[0.9rem] text-red-600">{{ fmt(calcLoad(l).totalDeductions) }}</div>
+                  <div class="font-extrabold text-[0.9rem] text-red-600 font-mono">{{ fmt(calcLoad(l).totalDeductions) }}</div>
                 </div>
                 <div class="py-2.5 text-center" :class="calcLoad(l).netPay >= 0 ? 'bg-emerald-500/10' : 'bg-red-50/60 dark:bg-red-500/10'">
                   <div class="text-[0.55rem] font-bold uppercase text-gray-400 tracking-wider">Net</div>
-                  <div class="font-extrabold text-[0.9rem]" :style="{color: calcLoad(l).netPay >= 0 ? '#22c55e' : '#dc2626'}">{{ fmt(calcLoad(l).netPay) }}</div>
+                  <div class="font-extrabold text-[0.9rem] font-mono" :style="{color: calcLoad(l).netPay >= 0 ? '#22c55e' : '#dc2626'}">{{ fmt(calcLoad(l).netPay) }}</div>
                 </div>
               </div>
               <!-- Action bar -->
@@ -161,9 +161,12 @@
 
     <!-- EDIT VIEW -->
     <template v-else>
-      <div class="flex items-center gap-3 mb-4">
-        <button class="btn btn-outline" @click="editing = false">&#8592; Back</button>
-        <h2 class="text-2xl font-bold text-gray-900">{{ editIndex < 0 ? 'Create New Load' : 'Edit Load' }}</h2>
+      <div class="flex items-center gap-3 mb-5">
+        <button class="btn btn-outline" @click="editing = false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
+        <h2 class="text-2xl font-bold text-gray-900 font-display">{{ editIndex < 0 ? 'Create New Load' : 'Edit Load' }}</h2>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
@@ -295,15 +298,15 @@
         <div class="card-header">Summary</div>
         <div class="card-body">
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="rounded-lg text-center p-3 bg-amber-50"><div class="label">Load Amount</div><div class="text-xl font-bold text-amber-700">{{ fmt(formCalc.gross) }}</div></div>
-            <div class="rounded-lg text-center p-3 bg-blue-50">
+            <div class="rounded-xl text-center p-3 bg-amber-50"><div class="label">Load Amount</div><div class="text-xl font-bold text-amber-700 font-mono">{{ fmt(formCalc.gross) }}</div></div>
+            <div class="rounded-xl text-center p-3 bg-blue-50">
               <div class="label">Driver Pay ({{ form.payRate }}%)</div>
-              <div class="text-xl font-bold text-blue-700">{{ fmt(formCalc.driverPayGross) }}</div>
-              <div class="text-[0.65rem] font-bold text-purple-600 mt-0.5">− {{ fmt(formCalc.factoring) }} factoring ({{ form.factoringRate }}%)</div>
-              <div class="text-sm font-extrabold text-blue-900 mt-0.5 pt-1 border-t border-blue-200">= {{ fmt(formCalc.driverPay) }}</div>
+              <div class="text-xl font-bold text-blue-700 font-mono">{{ fmt(formCalc.driverPayGross) }}</div>
+              <div class="text-[0.65rem] font-bold text-purple-600 mt-0.5 font-mono">- {{ fmt(formCalc.factoring) }} factoring ({{ form.factoringRate }}%)</div>
+              <div class="text-sm font-extrabold text-blue-900 mt-0.5 pt-1 border-t border-blue-200 font-mono">= {{ fmt(formCalc.driverPay) }}</div>
             </div>
-            <div class="rounded-lg text-center p-3 bg-red-50"><div class="label">Total Deductions</div><div class="text-xl font-bold text-red-600">{{ fmt(formCalc.totalDeductions) }}</div></div>
-            <div :class="formCalc.netPay >= 0 ? 'bg-green-50' : 'bg-red-50'" class="rounded-lg text-center p-3"><div class="label">Net Pay</div><div class="text-xl font-bold" :style="{color: formCalc.netPay >= 0 ? '#16a34a' : '#dc2626'}">{{ fmt(formCalc.netPay) }}</div></div>
+            <div class="rounded-xl text-center p-3 bg-red-50"><div class="label">Total Deductions</div><div class="text-xl font-bold text-red-600 font-mono">{{ fmt(formCalc.totalDeductions) }}</div></div>
+            <div :class="formCalc.netPay >= 0 ? 'bg-green-50' : 'bg-red-50'" class="rounded-xl text-center p-3"><div class="label">Net Pay</div><div class="text-xl font-bold font-mono" :style="{color: formCalc.netPay >= 0 ? '#16a34a' : '#dc2626'}">{{ fmt(formCalc.netPay) }}</div></div>
           </div>
         </div>
       </div>

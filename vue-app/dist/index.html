@@ -2,32 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Sunshine Trans INC - Payroll Dashboard</title>
   <meta name="description" content="Driver payroll management system for Sunshine Trans INC" />
-  <meta name="theme-color" content="#1e3a8a" />
+  <meta name="theme-color" content="#070b1a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Sunshine Trans" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: { extend: { fontFamily: { sans: ['Rajdhani','system-ui','sans-serif'] } } }
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Outfit','system-ui','sans-serif'],
+            sans: ['Plus Jakarta Sans','system-ui','sans-serif'],
+            mono: ['JetBrains Mono','monospace'],
+          },
+          colors: {
+            surface: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              800: '#0f1629',
+              900: '#070b1a',
+              950: '#040711',
+            },
+            gold: {
+              400: '#fbbf24',
+              500: '#f0b429',
+              600: '#d99e1e',
+            }
+          }
+        }
+      }
     }
   </script>
-  <script type="module" crossorigin src="/assets/index-BEUIa8yH.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-728rZpv2.css">
+  <script type="module" crossorigin src="/assets/index-CySAyDY6.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-B3xga3Q8.css">
 </head>
 <body>
   <div id="app"></div>
   <script>
-    // Unregister stale service workers from previous projects
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
     }
-  </script>
+  </script>
 </body>
 </html>

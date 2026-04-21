@@ -168,7 +168,10 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="card"><div class="card-header">Load Information</div><div class="card-body space-y-3">
-          <div class="field-group"><div class="label">Load Invoice #</div><input type="text" v-model="form.loadNumber" placeholder="e.g. 12345"/></div>
+          <div class="field-group">
+            <div class="label flex items-center gap-1">Load Invoice # <span class="text-red-500 text-[0.6rem]">*required</span></div>
+            <input type="text" v-model="form.loadNumber" placeholder="e.g. 12345" class="!border-amber-400/40 !bg-amber-50/5" style="border-width:2px;"/>
+          </div>
           <div class="field-group">
             <div class="label">Load Name / Route</div>
             <div class="relative">
@@ -233,7 +236,7 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <!-- Fuel -->
-        <div class="card"><div class="card-header" style="background:#dc2626; color:#fff; border-radius:0.75rem 0.75rem 0 0;">
+        <div class="card"><div class="card-header" style="background:linear-gradient(135deg,#991b1b,#dc2626); color:#fff; border-radius:0.75rem 0.75rem 0 0;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M13 10h4a2 2 0 0 1 2 2v8"/><path d="M19 14v-2a2 2 0 0 1 2-2v0a2 2 0 0 1 2 2v4a4 4 0 0 1-4 4h-2"/><circle cx="8" cy="10" r="2"/></svg>
           Fuel Calculator
         </div><div class="card-body">
@@ -275,12 +278,15 @@
           <div class="flex justify-between mt-3 pt-3 border-t font-bold text-sm"><span>Total Fuel</span><span class="text-red-600">{{ fmt(formCalc.fuelTotal) }}</span></div>
         </div></div>
         <!-- Expenses -->
-        <div class="card"><div class="card-header" style="background:#dc2626; color:#fff; border-radius:0.75rem 0.75rem 0 0;">Expenses</div><div class="card-body">
-          <div v-for="(e, i) in form.expenses" :key="i" class="expense-row">
-            <input type="text" v-model="e.name" :disabled="e.isDriverPay" :class="e.isDriverPay ? 'driver-pay-label' : ''"/>
+        <div class="card"><div class="card-header" style="background:linear-gradient(135deg,#991b1b,#dc2626); color:#fff; border-radius:0.75rem 0.75rem 0 0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Expenses
+        </div><div class="card-body">
+          <div v-for="(e, i) in form.expenses" :key="i" :class="['expense-row transition-opacity', !e.isDriverPay && !e.amount ? 'opacity-50' : '']">
+            <input type="text" v-model="e.name" :disabled="e.isDriverPay" :class="['text-sm', e.isDriverPay ? 'driver-pay-label' : '']"/>
             <div class="flex gap-1">
-              <input v-if="e.isDriverPay" type="text" :value="fmt(formCalc.driverPay)" disabled class="text-right font-semibold driver-pay-amount"/>
-              <input v-else type="number" v-model.number="e.amount" min="0" step="0.01" placeholder="0.00" class="text-right"/>
+              <input v-if="e.isDriverPay" type="text" :value="fmt(formCalc.driverPay)" disabled class="text-right font-semibold text-sm driver-pay-amount"/>
+              <input v-else type="number" v-model.number="e.amount" min="0" step="0.01" placeholder="0.00" class="text-right text-sm"/>
               <button v-if="!e.isDriverPay" class="btn btn-danger text-xs py-1 px-1.5" @click="form.expenses.splice(i,1)">&times;</button>
               <div v-else style="width:30px"></div>
             </div>
@@ -290,27 +296,32 @@
         </div></div>
       </div>
 
-      <!-- Summary -->
-      <div class="card mb-4" style="border-color:#1e3a8a;">
-        <div class="card-header">Summary</div>
-        <div class="card-body">
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="rounded-xl text-center p-3 bg-amber-50"><div class="label">Load Amount</div><div class="text-xl font-bold text-amber-700 font-mono">{{ fmt(formCalc.gross) }}</div></div>
-            <div class="rounded-xl text-center p-3 bg-blue-50">
-              <div class="label">Driver Pay ({{ form.payRate }}%)</div>
-              <div class="text-xl font-bold text-blue-700 font-mono">{{ fmt(formCalc.driverPayGross) }}</div>
-              <div class="text-[0.65rem] font-bold text-purple-600 mt-0.5 font-mono">- {{ fmt(formCalc.factoring) }} factoring ({{ form.factoringRate }}%)</div>
-              <div class="text-sm font-extrabold text-blue-900 mt-0.5 pt-1 border-t border-blue-200 font-mono">= {{ fmt(formCalc.driverPay) }}</div>
+      <!-- Summary (sticky on mobile) -->
+      <div class="sm:relative sticky bottom-0 z-20 -mx-3 sm:mx-0 mb-0 sm:mb-4">
+        <div class="card sm:rounded-xl rounded-none" style="border-color:#1e3a8a; box-shadow:0 -4px 20px rgba(0,0,0,.15);">
+          <div class="card-header text-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-50"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Summary
+          </div>
+          <div class="card-body p-3">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div class="rounded-lg text-center p-2.5 bg-amber-50"><div class="label text-[0.5rem]">Load Amount</div><div class="text-base font-bold text-amber-700 font-mono">{{ fmt(formCalc.gross) }}</div></div>
+              <div class="rounded-lg text-center p-2.5 bg-blue-50">
+                <div class="label text-[0.5rem]">Driver Pay ({{ form.payRate }}%)</div>
+                <div class="text-base font-bold text-blue-700 font-mono">{{ fmt(formCalc.driverPayGross) }}</div>
+                <div class="text-[0.55rem] font-bold text-purple-600 font-mono">- {{ fmt(formCalc.factoring) }} fact.</div>
+                <div class="text-xs font-extrabold text-blue-900 pt-0.5 border-t border-blue-200 font-mono">= {{ fmt(formCalc.driverPay) }}</div>
+              </div>
+              <div class="rounded-lg text-center p-2.5 bg-red-50"><div class="label text-[0.5rem]">Deductions</div><div class="text-base font-bold text-red-600 font-mono">{{ fmt(formCalc.totalDeductions) }}</div></div>
+              <div :class="formCalc.netPay >= 0 ? 'bg-green-50' : 'bg-red-50'" class="rounded-lg text-center p-2.5"><div class="label text-[0.5rem]">Net Pay</div><div class="text-base font-bold font-mono" :style="{color: formCalc.netPay >= 0 ? '#16a34a' : '#dc2626'}">{{ fmt(formCalc.netPay) }}</div></div>
             </div>
-            <div class="rounded-xl text-center p-3 bg-red-50"><div class="label">Total Deductions</div><div class="text-xl font-bold text-red-600 font-mono">{{ fmt(formCalc.totalDeductions) }}</div></div>
-            <div :class="formCalc.netPay >= 0 ? 'bg-green-50' : 'bg-red-50'" class="rounded-xl text-center p-3"><div class="label">Net Pay</div><div class="text-xl font-bold font-mono" :style="{color: formCalc.netPay >= 0 ? '#16a34a' : '#dc2626'}">{{ fmt(formCalc.netPay) }}</div></div>
+            <!-- Save/Cancel inline -->
+            <div class="flex items-center gap-2 mt-3">
+              <button class="btn btn-gold flex-grow justify-center py-3 text-sm font-bold tracking-wide" @click="saveForm()">{{ editIndex < 0 ? 'Save Load' : 'Update Load' }}</button>
+              <button class="btn btn-outline justify-center px-4 py-3 text-sm font-semibold" @click="editing = false">Cancel</button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="flex items-center gap-3 pb-6">
-        <button class="btn btn-gold flex-grow justify-center py-4 text-lg font-semibold tracking-wide" @click="saveForm()">{{ editIndex < 0 ? 'Save Load' : 'Update Load' }}</button>
-        <button class="btn btn-outline justify-center px-5 py-4 text-lg font-semibold" @click="editing = false">Cancel</button>
       </div>
     </template>
     <!-- Delete Confirmation Modal -->

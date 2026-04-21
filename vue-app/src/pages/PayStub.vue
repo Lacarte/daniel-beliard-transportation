@@ -30,17 +30,35 @@
       </div>
 
       <div class="card-body">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div class="space-y-2.5">
-            <div class="flex gap-2"><span class="label w-32 mb-0 text-[0.65rem]">PAYEE NAME</span><span class="font-semibold text-gray-900 text-sm">{{ state.settings.payeeName }}</span></div>
-            <div class="flex gap-2"><span class="label w-32 mb-0 text-[0.65rem]">PERIOD</span><span class="font-semibold text-gray-900 text-sm">{{ state.settings.paymentDate }}</span></div>
-            <div class="flex gap-2"><span class="label w-32 mb-0 text-[0.65rem]">METHOD</span><span class="font-semibold text-gray-900 text-sm">{{ state.settings.paymentMethod }}</span></div>
-            <div class="flex gap-2"><span class="label w-32 mb-0 text-[0.65rem]">TOTAL LOADS</span><span class="font-semibold text-gray-900 text-sm">{{ agg.count }}</span></div>
+        <!-- Info grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">
+          <div class="rounded-xl p-3 bg-gray-50 border border-gray-100">
+            <div class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider mb-1">Payee</div>
+            <div class="font-bold text-sm text-gray-900 font-display truncate">{{ state.settings.payeeName }}</div>
           </div>
-          <div class="space-y-2.5">
-            <div class="flex gap-2"><span class="label w-32 mb-0 text-[0.65rem]">TAX STATUS</span><span class="font-semibold text-gray-900 text-sm">{{ state.settings.taxStatus }}</span></div>
-            <div class="flex gap-2"><span class="label w-32 mb-0 text-[0.65rem]">PAY RATE</span><span class="font-semibold text-gray-900 text-sm">{{ state.settings.payRate }}%</span></div>
-            <div class="flex gap-2"><span class="label w-32 mb-0 text-[0.65rem]">ALLOWANCES</span><span class="font-semibold text-gray-900 text-sm">{{ state.settings.allowances }}</span></div>
+          <div class="rounded-xl p-3 bg-gray-50 border border-gray-100">
+            <div class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider mb-1">Period</div>
+            <div class="font-bold text-sm text-gray-900 font-display">{{ state.settings.paymentDate }}</div>
+          </div>
+          <div class="rounded-xl p-3 bg-gray-50 border border-gray-100">
+            <div class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider mb-1">Method</div>
+            <div class="font-bold text-sm text-gray-900 font-display">{{ state.settings.paymentMethod }}</div>
+          </div>
+          <div class="rounded-xl p-3 bg-gray-50 border border-gray-100">
+            <div class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider mb-1">Total Loads</div>
+            <div class="font-bold text-xl text-gray-900 font-display">{{ agg.count }}</div>
+          </div>
+          <div class="rounded-xl p-3 bg-gray-50 border border-gray-100">
+            <div class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider mb-1">Tax Status</div>
+            <div class="font-bold text-sm text-emerald-600 font-display">{{ state.settings.taxStatus }}</div>
+          </div>
+          <div class="rounded-xl p-3 bg-gray-50 border border-gray-100">
+            <div class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider mb-1">Pay Rate</div>
+            <div class="font-bold text-sm text-amber-600 font-display">{{ state.settings.payRate }}%</div>
+          </div>
+          <div class="rounded-xl p-3 bg-gray-50 border border-gray-100 col-span-2 sm:col-span-2">
+            <div class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider mb-1">Allowances</div>
+            <div class="font-bold text-sm text-gray-900 font-display">{{ state.settings.allowances }}</div>
           </div>
         </div>
 

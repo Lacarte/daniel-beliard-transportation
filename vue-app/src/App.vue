@@ -19,16 +19,6 @@
       <div class="absolute -bottom-20 -left-20 w-60 h-60 rounded-full opacity-[0.07]" style="background:radial-gradient(circle, #fbbf24, transparent 70%);"></div>
     </div>
 
-    <!-- Breadcrumb -->
-    <nav class="relative z-10 mb-2 flex items-center gap-1.5 text-[0.7rem] font-medium pl-10 sm:pl-0" v-if="$route.meta.label">
-      <router-link to="/" class="text-white/30 hover:text-white/50 transition-colors flex items-center gap-1 no-underline">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        Home
-      </router-link>
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/20"><polyline points="9 18 15 12 9 6"/></svg>
-      <span class="text-white/60 font-semibold">{{ $route.meta.label }}</span>
-    </nav>
-
     <!-- Mobile Header -->
     <header class="sm:hidden mb-4 relative z-10">
       <div class="pl-10 pr-1 pt-1 pb-6">
@@ -56,17 +46,34 @@
         </div>
       </div>
 
+      <!-- Breadcrumb (mobile) -->
+      <nav class="mx-2 mb-2 flex items-center gap-1.5 text-[0.65rem] font-medium" v-if="$route.meta.label">
+        <router-link to="/" class="text-white/30 hover:text-white/50 transition-colors flex items-center gap-1 no-underline">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Home
+        </router-link>
+        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white/15"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="text-white/50 font-semibold">{{ $route.meta.label }}</span>
+      </nav>
+
       <!-- Floating info card -->
       <div class="mx-1 rounded-2xl info-card overflow-hidden" style="background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.03);">
-        <div class="grid grid-cols-4 divide-x divide-gray-100">
+        <div class="grid grid-cols-4 divide-x divide-white/[.06]">
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
             <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(59,130,246,.12);">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
             </div>
             <span class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-wider">Period</span>
-            <div class="flex flex-col items-center gap-0.5">
-              <span class="text-[0.65rem] font-bold text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 leading-none">{{ state.settings.paymentDate.split('-')[0] }}</span>
-              <span class="text-[0.65rem] font-bold text-blue-600 bg-blue-50 rounded px-1.5 py-0.5 leading-none">{{ state.settings.paymentDate.split('-')[1] }}</span>
+            <div class="flex items-center gap-1">
+              <div class="text-center">
+                <div class="text-[0.8rem] font-extrabold text-blue-600 font-display leading-none">{{ periodStart.day }}</div>
+                <div class="text-[0.5rem] font-bold text-blue-400 uppercase">{{ periodStart.mon }}</div>
+              </div>
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="3" class="opacity-40"><polyline points="9 18 15 12 9 6"/></svg>
+              <div class="text-center">
+                <div class="text-[0.8rem] font-extrabold text-blue-600 font-display leading-none">{{ periodEnd.day }}</div>
+                <div class="text-[0.5rem] font-bold text-blue-400 uppercase">{{ periodEnd.mon }}</div>
+              </div>
             </div>
           </div>
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
@@ -93,6 +100,16 @@
         </div>
       </div>
     </header>
+
+    <!-- Breadcrumb (desktop) -->
+    <nav class="hidden sm:flex relative z-10 mb-2 items-center gap-1.5 text-[0.7rem] font-medium" v-if="$route.meta.label">
+      <router-link to="/" class="text-white/30 hover:text-white/50 transition-colors flex items-center gap-1 no-underline">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Home
+      </router-link>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/20"><polyline points="9 18 15 12 9 6"/></svg>
+      <span class="text-white/60 font-semibold">{{ $route.meta.label }}</span>
+    </nav>
 
     <!-- Desktop Header -->
     <header class="hidden sm:block card mb-5 relative overflow-hidden z-10">
@@ -150,4 +167,14 @@ const sidebarOpen = ref(false)
 const initials = computed(() => state.settings.payeeName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase())
 const todayDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 const shortDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+function parsePeriodPart(str) {
+  const s = (str || '').trim()
+  const parts = s.split('/')
+  if (parts.length >= 2) return { day: parts[1], mon: months[parseInt(parts[0], 10) - 1] || parts[0] }
+  return { day: '--', mon: '---' }
+}
+const periodStart = computed(() => parsePeriodPart(state.settings.paymentDate.split('-')[0]))
+const periodEnd = computed(() => parsePeriodPart(state.settings.paymentDate.split('-')[1]))
 </script>

@@ -26,8 +26,8 @@ function getDefaultState() {
   return {
     managedLoads: [],
     settings: {
-      payeeName: 'Daniel Beliard',
-      paymentDate: '06/01/24-06/30/24',
+      payeeName: '',
+      paymentDate: '',
       paymentMethod: 'Monthly',
       payRate: 20,
       factoringRate: 2.5,
@@ -48,62 +48,20 @@ function getDefaultState() {
   }
 }
 
-function migrateOldData(parsed) {
-  if (parsed.loads && parsed.loads.length && (!parsed.managedLoads || !parsed.managedLoads.length)) {
-    const fuel = parsed.fuel || []
-    const expenses = parsed.expenses || JSON.parse(JSON.stringify(DEFAULT_EXPENSE_TEMPLATE))
-    const s = parsed.settings || {}
-    parsed.managedLoads = parsed.loads.map(l => {
-      const amount = parseFloat(l.amount) || 0
-      const rate = s.payRate || 20
-      const dp = amount * (rate / 100)
-      return {
-        id: generateId(),
-        name: l.name || 'Untitled',
-        amount,
-        loadDate: new Date().toISOString().slice(0, 10),
-        deliveryDate: '',
-        status: 'delivered',
-        driverName: s.payeeName || '',
-        payRate: rate,
-        payMethod: s.paymentMethod || 'Monthly',
-        taxStatus: s.taxStatus || '1099',
-        fuel: JSON.parse(JSON.stringify(fuel)),
-        expenses: JSON.parse(JSON.stringify(expenses)),
-        notes: '',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }
-    })
-    delete parsed.loads
-    delete parsed.fuel
-    delete parsed.expenses
-  }
-  return parsed
-}
-
-function loadState() {
-  try {
-    const saved = localStorage.getItem('sunshine_payroll')
-    if (saved) {
-      let parsed = JSON.parse(saved)
-      parsed = migrateOldData(parsed)
-      const def = getDefaultState()
-      return { ...def, ...parsed, settings: { ...def.settings, ...(parsed.settings || {}) } }
-    }
-  } catch (e) { /* ignore */ }
-  return getDefaultState()
-}
-
-const state = reactive(loadState())
+const state = reactive(getDefaultState())
 const syncing = ref(false)
 const dbReady = ref(false)
 let settingsId = null
 let skipWatch = false
+let currentUserId = null
+
+// ========== AUTH HELPER ==========
+function getUserId() {
+  return currentUserId
+}
 
 // ========== SUPABASE HELPERS ==========
 
-// Convert DB row to app load object
 function dbLoadToApp(row, fuelRows, expenseRows) {
   return {
     id: row.id,
@@ -172,25 +130,50 @@ function dbHistoryToApp(row) {
 
 // ========== SUPABASE SYNC ==========
 
-async function fetchAll() {
+async function fetchAll(userId) {
+  if (!userId) return
+  currentUserId = userId
   syncing.value = true
+  dbReady.value = false
+
   try {
-    // Fetch settings
-    const { data: settingsRows } = await supabase.from('settings').select('*').limit(1)
+    // Reset state before fetching
+    skipWatch = true
+    Object.assign(state, getDefaultState())
+    skipWatch = false
+
+    // Fetch settings for this user
+    const { data: settingsRows } = await supabase.from('settings').select('*').eq('user_id', userId).limit(1)
     if (settingsRows && settingsRows.length > 0) {
       settingsId = settingsRows[0].id
       const s = dbSettingsToApp(settingsRows[0])
       Object.assign(state.settings, s)
+    } else {
+      // First login — create default settings for this user
+      const { data } = await supabase.from('settings').insert({
+        user_id: userId,
+        payee_name: '',
+        company_name: 'SUNSHINE TRANS INC',
+        payment_date: '',
+        payment_method: 'Monthly',
+        pay_rate: 20,
+        factoring_rate: 2.5,
+        tax_status: '1099',
+        expense_template: DEFAULT_EXPENSE_TEMPLATE,
+      }).select()
+      if (data && data[0]) {
+        settingsId = data[0].id
+        Object.assign(state.settings, dbSettingsToApp(data[0]))
+      }
     }
 
-    // Fetch all loads
-    const { data: loadRows } = await supabase.from('loads').select('*').order('created_at', { ascending: false })
-    if (loadRows) {
-      // Fetch fuel & expenses for all loads in parallel
+    // Fetch all loads for this user
+    const { data: loadRows } = await supabase.from('loads').select('*').eq('user_id', userId).order('created_at', { ascending: false })
+    if (loadRows && loadRows.length) {
       const loadIds = loadRows.map(l => l.id)
       const [{ data: allFuel }, { data: allExpenses }] = await Promise.all([
-        supabase.from('fuel_entries').select('*').in('load_id', loadIds.length ? loadIds : ['']).order('sort_order'),
-        supabase.from('expenses').select('*').in('load_id', loadIds.length ? loadIds : ['']).order('sort_order'),
+        supabase.from('fuel_entries').select('*').in('load_id', loadIds).order('sort_order'),
+        supabase.from('expenses').select('*').in('load_id', loadIds).order('sort_order'),
       ])
       const fuelByLoad = {}
       const expByLoad = {}
@@ -202,8 +185,8 @@ async function fetchAll() {
       skipWatch = false
     }
 
-    // Fetch history
-    const { data: historyRows } = await supabase.from('history').select('*').order('saved_at', { ascending: false })
+    // Fetch history for this user
+    const { data: historyRows } = await supabase.from('history').select('*').eq('user_id', userId).order('saved_at', { ascending: false })
     if (historyRows) {
       skipWatch = true
       state.history = historyRows.map(dbHistoryToApp)
@@ -211,19 +194,28 @@ async function fetchAll() {
     }
 
     dbReady.value = true
-    // Cache to localStorage
-    localStorage.setItem('sunshine_payroll', JSON.stringify(state))
   } catch (e) {
-    console.warn('Supabase fetch failed, using localStorage cache:', e)
+    console.warn('Supabase fetch failed:', e)
   } finally {
     syncing.value = false
   }
 }
 
+function clearState() {
+  skipWatch = true
+  Object.assign(state, getDefaultState())
+  skipWatch = false
+  dbReady.value = false
+  settingsId = null
+  currentUserId = null
+}
+
 async function saveSettingsToDb() {
-  if (!dbReady.value) return
+  const uid = getUserId()
+  if (!dbReady.value || !uid) return
   const s = state.settings
   const row = {
+    user_id: uid,
     payee_name: s.payeeName,
     company_name: s.companyName,
     company_email: s.companyEmail,
@@ -250,9 +242,11 @@ async function saveSettingsToDb() {
 }
 
 async function saveLoadToDb(load) {
-  if (!dbReady.value) return
+  const uid = getUserId()
+  if (!dbReady.value || !uid) return
   const row = {
     id: load.id,
+    user_id: uid,
     load_number: load.loadNumber || '',
     name: load.name || '',
     amount: load.amount || 0,
@@ -267,7 +261,6 @@ async function saveLoadToDb(load) {
     notes: load.notes || '',
   }
 
-  // Upsert the load
   await supabase.from('loads').upsert(row)
 
   // Replace fuel entries
@@ -275,6 +268,7 @@ async function saveLoadToDb(load) {
   if (load.fuel && load.fuel.length) {
     const fuelRows = load.fuel.map((f, i) => ({
       load_id: load.id,
+      user_id: uid,
       name: f.name || '',
       miles: f.miles || 0,
       price_per_gallon: f.pricePerGallon || 0,
@@ -289,6 +283,7 @@ async function saveLoadToDb(load) {
   if (load.expenses && load.expenses.length) {
     const expRows = load.expenses.map((e, i) => ({
       load_id: load.id,
+      user_id: uid,
       name: e.name || '',
       amount: e.amount || 0,
       is_driver_pay: e.isDriverPay || false,
@@ -304,8 +299,10 @@ async function deleteLoadFromDb(loadId) {
 }
 
 async function saveHistoryToDb(entry) {
-  if (!dbReady.value) return
+  const uid = getUserId()
+  if (!dbReady.value || !uid) return
   const { data } = await supabase.from('history').insert({
+    user_id: uid,
     period: entry.period,
     payee: entry.payee,
     gross: entry.gross,
@@ -322,14 +319,10 @@ async function deleteHistoryFromDb(dbId) {
   await supabase.from('history').delete().eq('id', dbId)
 }
 
-// ========== INIT: Fetch from Supabase ==========
-fetchAll()
-
-// ========== LOCAL STORAGE SYNC (cache + fallback) ==========
+// ========== LOCAL STORAGE SYNC (debounced settings save) ==========
 let debounceTimer = null
 watch(state, () => {
   if (skipWatch) return
-  localStorage.setItem('sunshine_payroll', JSON.stringify(state))
   // Debounced settings sync
   clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => {
@@ -472,19 +465,18 @@ function fmt(n) {
 }
 
 async function resetAll() {
-  // Clear Supabase tables
-  if (dbReady.value) {
-    await supabase.from('fuel_entries').delete().neq('id', '')
-    await supabase.from('expenses').delete().neq('id', '')
-    await supabase.from('documents').delete().neq('id', '')
-    await supabase.from('loads').delete().neq('id', '')
-    await supabase.from('history').delete().neq('id', '')
+  const uid = getUserId()
+  if (dbReady.value && uid) {
+    await supabase.from('fuel_entries').delete().eq('user_id', uid)
+    await supabase.from('expenses').delete().eq('user_id', uid)
+    await supabase.from('documents').delete().eq('user_id', uid)
+    await supabase.from('loads').delete().eq('user_id', uid)
+    await supabase.from('history').delete().eq('user_id', uid)
     if (settingsId) {
       await supabase.from('settings').delete().eq('id', settingsId)
       settingsId = null
     }
   }
-  localStorage.clear()
   Object.assign(state, getDefaultState())
 }
 
@@ -524,7 +516,7 @@ export function usePayroll() {
     calcLoad, getFilteredLoads, getAggregates, getPeriodDates,
     createLoad, updateLoad, deleteLoad,
     saveToHistory, removeHistory,
-    fmt, resetAll, generateId, fetchAll,
+    fmt, resetAll, generateId, fetchAll, clearState,
     DEFAULT_EXPENSE_TEMPLATE,
   }
 }

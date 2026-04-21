@@ -23,13 +23,21 @@
       </router-link>
     </nav>
 
-    <!-- Sign In -->
+    <!-- User / Sign Out -->
     <div class="px-3 pb-2">
-      <button class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold text-white/60 hover:text-white hover:bg-white/[.06] transition-all active:scale-[0.98]" @click="$emit('login')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Sign In
-        <span class="ml-auto text-[0.55rem] font-bold text-amber-400/60 uppercase tracking-wider">Soon</span>
-      </button>
+      <div v-if="user" class="flex items-center gap-3 px-3 py-2.5 rounded-lg" style="background:rgba(255,255,255,.04);">
+        <img v-if="userAvatar" :src="userAvatar" class="w-8 h-8 rounded-full flex-shrink-0" referrerpolicy="no-referrer" />
+        <div v-else class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold text-amber-400" style="background:rgba(251,191,36,.15);">
+          {{ userName.charAt(0).toUpperCase() }}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-white text-xs font-semibold truncate">{{ userName }}</div>
+          <div class="text-white/30 text-[0.6rem] truncate">{{ userEmail }}</div>
+        </div>
+        <button @click="handleSignOut" class="w-7 h-7 rounded-md flex items-center justify-center text-white/30 hover:text-red-400 hover:bg-red-400/10 transition-all flex-shrink-0" title="Sign out">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
     </div>
 
     <!-- Footer -->
@@ -40,8 +48,16 @@
 </template>
 
 <script setup>
+import { useAuth } from '../composables/useAuth'
+
 defineProps({ open: Boolean })
-defineEmits(['close', 'login'])
+defineEmits(['close'])
+
+const { user, userName, userEmail, userAvatar, signOut } = useAuth()
+
+function handleSignOut() {
+  signOut()
+}
 const icon = (d) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`
 const nav = [
   { to: '/', label: 'Load Manager', icon: icon('<rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>') },

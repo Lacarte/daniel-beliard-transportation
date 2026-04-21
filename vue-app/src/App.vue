@@ -1,4 +1,14 @@
 <template>
+  <!-- Auth Loading -->
+  <div v-if="authLoading" class="min-h-screen flex items-center justify-center" style="background:linear-gradient(145deg, #070b1a 0%, #0d1a3a 40%, #1e3a8a 100%);">
+    <div class="text-white/40 text-sm font-medium">Loading...</div>
+  </div>
+
+  <!-- Login Page -->
+  <Login v-else-if="!isAuthenticated" />
+
+  <!-- Authenticated App -->
+  <template v-else>
   <ToastNotification />
 
   <!-- Mobile menu button -->
@@ -40,7 +50,7 @@
       <!-- Identity block -->
       <div class="px-4 pb-5">
         <div class="text-white/30 text-[0.6rem] font-semibold tracking-[0.18em] uppercase mb-1">Welcome back</div>
-        <div class="text-white font-display font-extrabold text-[1.6rem] leading-none tracking-tight">{{ state.settings.payeeName }}</div>
+        <div class="text-white font-display font-extrabold text-[1.6rem] leading-none tracking-tight">{{ displayName }}</div>
         <div class="text-amber-400/40 text-[0.6rem] font-bold mt-2 tracking-[0.12em] uppercase flex items-center gap-1.5">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
           {{ state.settings.companyName }}
@@ -120,7 +130,7 @@
           {{ initials }}
         </div>
         <div class="flex-1 min-w-0">
-          <h1 class="text-xl font-bold text-gray-900 truncate font-display">Welcome back, {{ state.settings.payeeName }}</h1>
+          <h1 class="text-xl font-bold text-gray-900 truncate font-display">Welcome back, {{ displayName }}</h1>
           <div class="flex items-center gap-3 text-sm text-gray-500 mt-0.5">
             <span class="text-xs">{{ todayDate }}</span>
             <span class="text-gray-300">&bull;</span>
@@ -151,23 +161,37 @@
       </transition>
     </router-view>
   </main>
+  </template>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import ToastNotification from './components/ToastNotification.vue'
+import Login from './pages/Login.vue'
 import { usePayroll } from './composables/usePayroll'
 import { useTheme } from './composables/useTheme'
 import { useToast } from './composables/useToast'
+import { useAuth } from './composables/useAuth'
 
-const { state } = usePayroll()
+const { state, fetchAll, clearState } = usePayroll()
 const { showToast } = useToast()
 const { isDark, toggle } = useTheme()
+const { user, isAuthenticated, loading: authLoading, userName } = useAuth()
 const sidebarOpen = ref(false)
 
-const initials = computed(() => state.settings.payeeName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase())
+// When user logs in/out, fetch or clear data
+watch(user, (newUser, oldUser) => {
+  if (newUser && newUser.id !== oldUser?.id) {
+    fetchAll(newUser.id)
+  } else if (!newUser) {
+    clearState()
+  }
+}, { immediate: true })
+
+const displayName = computed(() => state.settings.payeeName || userName.value || '')
+const initials = computed(() => displayName.value.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase())
 const todayDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 const shortDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 

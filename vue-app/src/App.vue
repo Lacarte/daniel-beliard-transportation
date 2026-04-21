@@ -25,6 +25,9 @@
         <div class="flex items-center justify-between mb-3">
           <div class="text-white/40 text-[0.65rem] font-semibold tracking-[0.15em] uppercase">Welcome back</div>
           <div class="flex gap-2">
+            <button @click="showToast('Google Sign-In coming soon', 'info')" class="w-8 h-8 rounded-lg flex items-center justify-center active:scale-95 transition-transform" style="background:rgba(255,255,255,.08); backdrop-filter:blur(4px);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </button>
             <button @click="toggle()" class="w-8 h-8 rounded-lg flex items-center justify-center active:scale-95 transition-transform" style="background:rgba(255,255,255,.08); backdrop-filter:blur(4px);">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6">
                 <template v-if="isDark"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></template>
@@ -140,6 +143,10 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
             Settings
           </router-link>
+          <button class="btn btn-outline text-xs py-1.5 px-3" @click="showToast('Google Sign-In coming soon', 'info')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Sign In
+          </button>
         </div>
       </div>
     </header>
@@ -159,8 +166,10 @@ import Sidebar from './components/Sidebar.vue'
 import ToastNotification from './components/ToastNotification.vue'
 import { usePayroll } from './composables/usePayroll'
 import { useTheme } from './composables/useTheme'
+import { useToast } from './composables/useToast'
 
 const { state } = usePayroll()
+const { showToast } = useToast()
 const { isDark, toggle } = useTheme()
 const sidebarOpen = ref(false)
 

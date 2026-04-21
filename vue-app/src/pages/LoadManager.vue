@@ -37,22 +37,22 @@
       </div>
 
       <!-- Period Summary -->
-      <div class="grid grid-cols-4 gap-2 sm:gap-3 mb-4 stagger-in">
-        <div class="card p-2.5 sm:p-3 text-center">
-          <div class="text-[0.55rem] sm:text-xs font-bold text-gray-400 uppercase tracking-wider">Loads</div>
-          <div class="text-xl sm:text-2xl font-extrabold text-gray-900 font-display mt-0.5">{{ agg.count }}</div>
+      <div class="grid grid-cols-4 gap-1.5 sm:gap-3 mb-4 stagger-in">
+        <div class="card p-2 sm:p-3 text-center overflow-hidden">
+          <div class="text-[0.5rem] sm:text-xs font-bold text-gray-400 uppercase tracking-wider">Loads</div>
+          <div class="text-lg sm:text-2xl font-extrabold text-gray-900 font-display mt-0.5">{{ agg.count }}</div>
         </div>
-        <div class="card p-2.5 sm:p-3 text-center">
-          <div class="text-[0.55rem] sm:text-xs font-bold text-emerald-500 uppercase tracking-wider">Gross</div>
-          <div class="text-sm sm:text-xl font-extrabold text-emerald-700 font-mono mt-0.5">{{ fmt(agg.totalGross) }}</div>
+        <div class="card p-2 sm:p-3 text-center overflow-hidden">
+          <div class="text-[0.5rem] sm:text-xs font-bold text-emerald-500 uppercase tracking-wider">Gross</div>
+          <div class="text-[0.7rem] sm:text-xl font-extrabold text-emerald-700 font-mono mt-0.5 truncate">{{ fmt(agg.totalGross) }}</div>
         </div>
-        <div class="card p-2.5 sm:p-3 text-center">
-          <div class="text-[0.55rem] sm:text-xs font-bold text-red-400 uppercase tracking-wider">Deduct.</div>
-          <div class="text-sm sm:text-xl font-extrabold text-red-600 font-mono mt-0.5">{{ fmt(agg.totalDeductions) }}</div>
+        <div class="card p-2 sm:p-3 text-center overflow-hidden">
+          <div class="text-[0.5rem] sm:text-xs font-bold text-red-400 uppercase tracking-wider">Deduct.</div>
+          <div class="text-[0.7rem] sm:text-xl font-extrabold text-red-600 font-mono mt-0.5 truncate">{{ fmt(agg.totalDeductions) }}</div>
         </div>
-        <div class="rounded-xl p-2.5 sm:p-3 text-center" :style="{background: agg.netPay >= 0 ? 'linear-gradient(135deg,#1e3a8a,#2563eb)' : 'linear-gradient(135deg,#dc2626,#ef4444)'}">
-          <div class="text-[0.55rem] sm:text-xs font-bold text-white/50 uppercase tracking-wider">Net</div>
-          <div class="text-sm sm:text-xl font-extrabold text-white font-mono mt-0.5">{{ fmt(agg.netPay) }}</div>
+        <div class="rounded-xl p-2 sm:p-3 text-center overflow-hidden" :style="{background: agg.netPay >= 0 ? 'linear-gradient(135deg,#1e3a8a,#2563eb)' : 'linear-gradient(135deg,#dc2626,#ef4444)'}">
+          <div class="text-[0.5rem] sm:text-xs font-bold text-white/50 uppercase tracking-wider">Net</div>
+          <div class="text-[0.7rem] sm:text-xl font-extrabold text-white font-mono mt-0.5 truncate">{{ fmt(agg.netPay) }}</div>
         </div>
       </div>
 

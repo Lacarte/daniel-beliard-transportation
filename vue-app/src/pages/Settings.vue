@@ -63,13 +63,13 @@
     </div>
 
     <div class="flex gap-3 mt-5 pb-8 sm:pb-4">
-      <button class="btn btn-primary flex-1 sm:flex-none justify-center py-3 sm:py-2" @click="showToast('Settings saved', 'success')">
+      <button class="btn btn-primary justify-center py-3 sm:py-2" style="flex:3;" @click="showToast('Settings saved', 'success')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
         Save Settings
       </button>
-      <button class="btn btn-danger flex-1 sm:flex-none justify-center py-3 sm:py-2" @click="doReset()">
+      <button class="btn btn-danger justify-center py-3 sm:py-2" style="flex:1;" @click="doReset()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-        Reset All Data
+        Reset
       </button>
     </div>
   </div>

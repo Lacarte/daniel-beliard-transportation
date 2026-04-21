@@ -15,4 +15,14 @@ const routes = [
   { path: '/settings', name: 'settings', component: Settings, meta: { label: 'Settings', icon: 'settings' } },
 ]
 
-export default createRouter({ history: createWebHistory(), routes })
+const router = createRouter({ history: createWebHistory(), routes })
+
+router.afterEach(() => {
+  setTimeout(() => {
+    const el = document.querySelector('.fade-in')
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    else window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, 50)
+})
+
+export default router

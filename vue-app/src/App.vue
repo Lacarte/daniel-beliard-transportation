@@ -21,46 +21,44 @@
 
     <!-- Mobile Header -->
     <header class="sm:hidden mb-4 relative z-10">
-      <div class="pl-10 pr-1 pt-1 pb-6">
-        <div class="flex items-center justify-between mb-3">
-          <div class="text-white/40 text-[0.65rem] font-semibold tracking-[0.15em] uppercase">Welcome back</div>
-          <div class="flex gap-2">
-            <button @click="showToast('Google Sign-In coming soon', 'info')" class="w-8 h-8 rounded-lg flex items-center justify-center active:scale-95 transition-transform" style="background:rgba(255,255,255,.08); backdrop-filter:blur(4px);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </button>
-            <button @click="toggle()" class="w-8 h-8 rounded-lg flex items-center justify-center active:scale-95 transition-transform" style="background:rgba(255,255,255,.08); backdrop-filter:blur(4px);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6">
-                <template v-if="isDark"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></template>
-                <template v-else><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></template>
-              </svg>
-            </button>
-            <router-link to="/settings" class="w-8 h-8 rounded-lg flex items-center justify-center active:scale-95 transition-transform" style="background:rgba(255,255,255,.08); backdrop-filter:blur(4px);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            </router-link>
-            <router-link to="/dashboard" class="w-8 h-8 rounded-lg flex items-center justify-center active:scale-95 transition-transform" style="background:rgba(255,255,255,.08); backdrop-filter:blur(4px);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            </router-link>
-          </div>
-        </div>
-        <div class="text-white font-display font-extrabold text-2xl leading-tight tracking-tight">{{ state.settings.payeeName }}</div>
-        <div class="text-amber-400/50 text-[0.65rem] font-bold mt-1.5 tracking-[0.12em] uppercase flex items-center gap-1.5">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <!-- Top bar: actions row flush with edges -->
+      <div class="flex items-center justify-end gap-2 px-4 pt-1 mb-4">
+        <button @click="toggle()" class="w-9 h-9 rounded-xl flex items-center justify-center active:scale-95 transition-all" style="background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.06);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5">
+            <template v-if="isDark"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></template>
+            <template v-else><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></template>
+          </svg>
+        </button>
+        <router-link to="/settings" class="w-9 h-9 rounded-xl flex items-center justify-center active:scale-95 transition-all no-underline" style="background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.06);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </router-link>
+        <router-link to="/dashboard" class="w-9 h-9 rounded-xl flex items-center justify-center active:scale-95 transition-all no-underline" style="background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.06);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </router-link>
+      </div>
+
+      <!-- Identity block -->
+      <div class="px-4 pb-5">
+        <div class="text-white/30 text-[0.6rem] font-semibold tracking-[0.18em] uppercase mb-1">Welcome back</div>
+        <div class="text-white font-display font-extrabold text-[1.6rem] leading-none tracking-tight">{{ state.settings.payeeName }}</div>
+        <div class="text-amber-400/40 text-[0.6rem] font-bold mt-2 tracking-[0.12em] uppercase flex items-center gap-1.5">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
           {{ state.settings.companyName }}
         </div>
       </div>
 
-      <!-- Breadcrumb (mobile) -->
-      <nav class="mx-2 mb-2 flex items-center gap-1.5 text-[0.65rem] font-medium" v-if="$route.meta.label">
-        <router-link to="/" class="text-white/30 hover:text-white/50 transition-colors flex items-center gap-1 no-underline">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <!-- Breadcrumb -->
+      <nav class="px-4 mb-2.5 flex items-center gap-1.5 text-[0.6rem] font-medium" v-if="$route.meta.label">
+        <router-link to="/" class="text-white/25 hover:text-white/45 transition-colors flex items-center gap-1 no-underline">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
           Home
         </router-link>
-        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white/15"><polyline points="9 18 15 12 9 6"/></svg>
-        <span class="text-white/50 font-semibold">{{ $route.meta.label }}</span>
+        <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-white/12"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="text-white/45 font-semibold">{{ $route.meta.label }}</span>
       </nav>
 
-      <!-- Floating info card -->
-      <div class="mx-1 rounded-2xl info-card overflow-hidden" style="background:#fff; box-shadow:0 4px 24px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.03);">
+      <!-- Info card -->
+      <div class="mx-4 rounded-2xl info-card overflow-hidden" style="background:#fff; box-shadow:0 8px 32px rgba(0,0,0,.12), 0 0 0 1px rgba(255,255,255,.04);">
         <div class="grid grid-cols-4 divide-x divide-white/[.06]">
           <div class="flex flex-col items-center py-3 px-1.5 gap-1">
             <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background:rgba(59,130,246,.18);">
@@ -143,10 +141,6 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
             Settings
           </router-link>
-          <button class="btn btn-outline text-xs py-1.5 px-3" @click="showToast('Google Sign-In coming soon', 'info')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Sign In
-          </button>
         </div>
       </div>
     </header>

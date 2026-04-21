@@ -23,8 +23,17 @@
       </router-link>
     </nav>
 
+    <!-- Sign In -->
+    <div class="px-3 pb-2">
+      <button class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold text-white/60 hover:text-white hover:bg-white/[.06] transition-all active:scale-[0.98]" @click="$emit('login')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Sign In
+        <span class="ml-auto text-[0.55rem] font-bold text-amber-400/60 uppercase tracking-wider">Soon</span>
+      </button>
+    </div>
+
     <!-- Footer -->
-    <div class="px-4 py-4 border-t border-white/[.04]">
+    <div class="px-4 py-3 border-t border-white/[.04]">
       <div class="text-white/15 text-[0.6rem] text-center font-medium tracking-wider">&copy; 2026 Sunshine Trans INC</div>
     </div>
   </aside>
@@ -32,7 +41,7 @@
 
 <script setup>
 defineProps({ open: Boolean })
-defineEmits(['close'])
+defineEmits(['close', 'login'])
 const icon = (d) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`
 const nav = [
   { to: '/', label: 'Load Manager', icon: icon('<rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>') },

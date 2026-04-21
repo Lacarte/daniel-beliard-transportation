@@ -4,11 +4,11 @@
     <div class="text-white/40 text-sm font-medium">Loading...</div>
   </div>
 
-  <!-- Login Page -->
-  <Login v-else-if="!isAuthenticated" />
+  <!-- Login overlay with blur -->
+  <Login v-if="!authLoading && !isAuthenticated" />
 
-  <!-- Authenticated App -->
-  <template v-else>
+  <!-- App (always rendered, blurred behind login when not authenticated) -->
+  <template v-if="!authLoading">
   <ToastNotification />
 
   <!-- Mobile menu button -->

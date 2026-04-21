@@ -18,14 +18,14 @@
       <!-- Header -->
       <div class="p-6 text-center relative overflow-hidden" style="background:linear-gradient(135deg,#070b1a 0%,#1e3a8a 100%);">
         <div class="absolute inset-0 opacity-[0.08]" style="background-image:url('data:image/svg+xml,<svg viewBox=&quot;0 0 256 256&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><filter id=&quot;n&quot;><feTurbulence type=&quot;fractalNoise&quot; baseFrequency=&quot;0.9&quot; numOctaves=&quot;4&quot; stitchTiles=&quot;stitch&quot;/></filter><rect width=&quot;100%25&quot; height=&quot;100%25&quot; filter=&quot;url(%23n)&quot;/></svg>');"></div>
-        <div class="relative z-10">
-          <div class="inline-flex items-center gap-2 mb-2">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
-            </div>
+        <div class="relative z-10 flex items-center gap-3 justify-start">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#f59e0b,#fbbf24); box-shadow:0 4px 12px rgba(245,158,11,.25);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg>
           </div>
-          <h1 class="text-2xl font-bold text-white tracking-wider font-display">{{ state.settings.companyName }}</h1>
-          <p class="text-white/30 text-xs tracking-[0.2em] mt-1 font-medium">PAY STUB</p>
+          <div class="text-left">
+            <h1 class="text-lg font-bold text-white tracking-wide font-display leading-tight">{{ state.settings.companyName }}</h1>
+            <p class="text-white/30 text-[0.6rem] tracking-[0.2em] font-medium">PAY STUB</p>
+          </div>
         </div>
       </div>
 

@@ -19,9 +19,19 @@
       <div class="absolute -bottom-20 -left-20 w-60 h-60 rounded-full opacity-[0.07]" style="background:radial-gradient(circle, #fbbf24, transparent 70%);"></div>
     </div>
 
+    <!-- Breadcrumb -->
+    <nav class="relative z-10 mb-2 flex items-center gap-1.5 text-[0.7rem] font-medium pl-10 sm:pl-0" v-if="$route.meta.label">
+      <router-link to="/" class="text-white/30 hover:text-white/50 transition-colors flex items-center gap-1 no-underline">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Home
+      </router-link>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/20"><polyline points="9 18 15 12 9 6"/></svg>
+      <span class="text-white/60 font-semibold">{{ $route.meta.label }}</span>
+    </nav>
+
     <!-- Mobile Header -->
     <header class="sm:hidden mb-4 relative z-10">
-      <div class="pl-10 pr-1 pt-2 pb-6">
+      <div class="pl-10 pr-1 pt-1 pb-6">
         <div class="flex items-center justify-between mb-3">
           <div class="text-white/40 text-[0.65rem] font-semibold tracking-[0.15em] uppercase">Welcome back</div>
           <div class="flex gap-2">
@@ -116,16 +126,6 @@
         </div>
       </div>
     </header>
-
-    <!-- Breadcrumb -->
-    <nav class="relative z-10 mb-4 flex items-center gap-1.5 text-[0.7rem] font-medium" v-if="$route.meta.label">
-      <router-link to="/" class="text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1 no-underline">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        Home
-      </router-link>
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-300"><polyline points="9 18 15 12 9 6"/></svg>
-      <span class="text-gray-600 font-semibold">{{ $route.meta.label }}</span>
-    </nav>
 
     <router-view class="relative z-10" v-slot="{ Component }">
       <transition name="fade" mode="out-in">
